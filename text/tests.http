@@ -1,0 +1,30 @@
+###
+POST http://localhost:8080/api/texts
+Content-Type: application/json
+
+{
+    "name": "amogus",
+    "content": "SUS"
+}
+
+###
+
+GET http://localhost:8080/api/texts
+
+###
+GET http://localhost:8080/api/texts/1
+
+###
+
+DELETE http://localhost:8080/api/texts/1
+
+###
+PUT http://localhost:8080/api/texts/1
+Content-Type: application/json
+
+{
+    "name": "Big",
+    "content": "Chungus"
+}
+
+###
