@@ -37,10 +37,6 @@ public class NamedEntityType implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    //TODO:POTRZEBNE?
-    @Column(name="named_entity_type_name")
-    private String name;
-
     @ManyToMany(mappedBy = "namedEntityTypes")
     @ToString.Exclude
     private List<TextTag> textTags;

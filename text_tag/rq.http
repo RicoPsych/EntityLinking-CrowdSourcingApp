@@ -1,0 +1,32 @@
+###
+POST http://localhost:8082/api/tags
+Content-Type: application/json
+
+{
+    "name":"TAG1",
+    "description":"desc1"
+}
+###
+POST http://localhost:8082/api/texts
+Content-Type: application/json
+
+{
+
+}
+
+###
+
+POST http://localhost:8082/api/netypes
+Content-Type: application/json
+
+{
+
+}
+
+###
+GET http://localhost:8082/api/tags
+###
+GET http://localhost:8082/api/texts/1
+
+###
+GET http://localhost:8082/api/netypes/1

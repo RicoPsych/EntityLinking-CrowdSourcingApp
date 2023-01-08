@@ -1,5 +1,7 @@
 package project.app.text.text;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +17,21 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import project.app.text.text.dto.*;
+import project.app.text.text_tag.TextTag;
+import project.app.text.text_tag.TextTagService;
 
 @RestController
 @RequestMapping("api/texts")
 public class TextController {
     private TextService textService;
+    private TextTagService tagService;
+    
 
     @Autowired
-    public TextController(TextService service){
-        textService = service;
+    public TextController(TextService service,TextTagService tagService){
+        this.textService = service;
+        this.tagService = tagService;
+
     }
 
     @GetMapping
@@ -44,8 +52,20 @@ public class TextController {
 
     @PostMapping
     public ResponseEntity<Void> postText(@RequestBody PostTextRequest rq, UriComponentsBuilder builder){
-        Text text = PostTextRequest.dtoToEntityMapper() //restrictions?
-            .apply(rq);
+        Text text = PostTextRequest.dtoToEntityMapper( 
+            tag_ids -> {
+            //if tag_ids == null -> tags = null;
+            List<TextTag> tags = new ArrayList<>();
+            for(Long id : tag_ids){
+                    Optional<TextTag> opt = tagService.find(id);
+                    if(opt.isPresent()){
+                        tags.add(opt.get());
+                    }
+                    /**If it doesnt find the tag just skips it TODO: */
+            }
+            return tags;
+        })
+        .apply(rq);
         text = textService.add(text);
         return ResponseEntity
             .created(builder
@@ -70,7 +90,19 @@ public class TextController {
     public ResponseEntity<Void> updateText(@PathVariable("id") Long id,@RequestBody PutTextRequest rq){
         Optional<Text> opt = textService.find(id);
         if (opt.isPresent()){
-            textService.update(PutTextRequest.dtoToEntityUpdater().apply(opt.get(),rq));
+            textService.update(PutTextRequest.dtoToEntityUpdater(
+                tag_ids -> {
+                    //if tag_ids == null -> tags = null;
+                    List<TextTag> tags = new ArrayList<>();
+                    for(Long _id : tag_ids){
+                        Optional<TextTag> _opt = tagService.find(_id);
+                        if(_opt.isPresent()){
+                            tags.add(_opt.get());
+                        }
+                        /**If it doesnt find the tag just skips it TODO: brak info o niedodanych tagach*/
+                    }
+                    return tags;
+                }).apply(opt.get(),rq));
             return ResponseEntity.accepted().build();
         }
         else{

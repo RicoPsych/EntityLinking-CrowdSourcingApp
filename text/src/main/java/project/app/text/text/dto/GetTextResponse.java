@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import project.app.text.text.Text;
+import project.app.text.text_tag.TextTag;
 
 @ToString
 @Setter
@@ -23,12 +24,16 @@ public class GetTextResponse {
     private Long id;
     private String name;
     private String content;
+    private Long[] tags;
+    //private Long[] namedEntities;
 
     public static Function<Text,GetTextResponse> entityToDtoMapper(){
         return text -> GetTextResponse.builder()
-                        .id(text.getId())
-                        .name(text.getName())
-                        .content(text.getContent())
-                        .build();
+            .id(text.getId())
+            .name(text.getName())
+            .content(text.getContent())
+            .tags(text.getTags().stream().map(tag -> tag.getId()).toArray(Long[]::new))
+            //.namedEntities(text.getEntities().stream().map(entity -> entity.getId()).toArray(Long[]::new))
+            .build();
     }
 }

@@ -44,9 +44,9 @@ public class TextTagService {
     @Transactional
     public void update(TextTag new_tag){
         repository.findById(new_tag.getId())
-            .ifPresent(tag -> {
-                tag.setName(new_tag.getName());
-                tag.setDescription(new_tag.getDescription());
-            });
+        .ifPresent(tag -> {
+            tag.setName(new_tag.getName());
+            tag.setDescription(new_tag.getDescription());
+        });
     }        
 }

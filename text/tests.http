@@ -1,30 +1,57 @@
 ###
-POST http://localhost:8080/api/texts
+POST http://localhost:8081/api/texts
 Content-Type: application/json
 
 {
     "name": "amogus",
-    "content": "SUS"
+    "content": "SUS",
+    "tag_ids":[1,2,3,4]
+}
+###
+
+POST http://localhost:8081/api/tags
+Content-Type: application/json
+
+{
+
 }
 
 ###
+POST http://localhost:8081/api/texts/1/entities
+Content-Type: application/json
 
-GET http://localhost:8080/api/texts
+{
+
+}
+###
+GET http://localhost:8081/api/texts
+###
+GET http://localhost:8081/api/texts/1
+###
+GET http://localhost:8081/api/tags/1
 
 ###
-GET http://localhost:8080/api/texts/1
+GET http://localhost:8081/api/texts/5
 
 ###
+GET http://localhost:8081/api/texts/1/entities/1
+###
 
-DELETE http://localhost:8080/api/texts/1
+DELETE http://localhost:8081/api/texts/1
+###
+
+DELETE http://localhost:8081/api/tags/1
+###
+DELETE http://localhost:8081/api/texts/1/entities/1
 
 ###
-PUT http://localhost:8080/api/texts/1
+PUT http://localhost:8081/api/texts/1
 Content-Type: application/json
 
 {
     "name": "Big",
-    "content": "Chungus"
+    "content": "Chungus",
+    "tag_ids":[2]
 }
 
 ###

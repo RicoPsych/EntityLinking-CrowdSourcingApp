@@ -7,15 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import project.app.text.text_event.TextEventRepository;
+import project.app.text.text_tag.TextTag;
 
 @Service
 public class TextService {
     private TextRepository textRepository;
+    private TextEventRepository eventRepository;
     //TODO: event repository
 
     @Autowired
-    public TextService(TextRepository repository){
+    public TextService(TextRepository repository,TextEventRepository event){
         this.textRepository = repository;
+        this.eventRepository = event;
     }
 
     public List<Text> findAll(){
@@ -25,6 +29,10 @@ public class TextService {
     public List<Text> findByName(String name){
         return textRepository.findByName(name);
     }
+    
+    public List<Text> findByTag(TextTag tag){
+        return textRepository.findByTagsContaining(tag);
+    }
 
     public Optional<Text> find(Long id){
         return textRepository.findById(id);
@@ -32,12 +40,15 @@ public class TextService {
 
     @Transactional
     public Text add(Text text){
+        eventRepository.save(text);
         return textRepository.save(text);
+
         //TODO: event repository
     }
 
     @Transactional
     public void delete(Text text){
+        eventRepository.delete(text);
         textRepository.delete(text);
         //TODO: event repository    
     }
@@ -48,6 +59,9 @@ public class TextService {
             .ifPresent(text -> {
                 text.setContent(new_text.getContent());
                 text.setName(new_text.getName());
+                text.setTags(new_text.getTags());
+                //text.setEntities(new_text.getEntities());
+                //text.setTasks(new_text.getTasks());
             });
     }        
 
