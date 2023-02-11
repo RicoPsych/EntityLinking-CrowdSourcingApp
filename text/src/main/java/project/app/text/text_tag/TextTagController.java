@@ -51,7 +51,7 @@ public class TextTagController {
         textTag = textTagService.add(textTag);
         return ResponseEntity
             .created(builder
-                .pathSegment("api","texts","{id}")
+                .pathSegment("api","tags","{id}")
                 .buildAndExpand(textTag.getId()).toUri())
             .build();  
     }
@@ -62,7 +62,6 @@ public class TextTagController {
         if (opt.isPresent()){
             //delete connection to the tag
             for(Text text : textService.findByTag(opt.get())){                
-
                 List<TextTag> new_tags = new ArrayList<>();
                 for (TextTag tag : text.getTags()) {
                     if(tag.getId() != opt.get().getId())

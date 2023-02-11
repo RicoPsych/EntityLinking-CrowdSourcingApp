@@ -56,7 +56,7 @@ public class TextTagController {
         textTag = textTagService.add(textTag);
         return ResponseEntity
             .created(builder
-                .pathSegment("api","texts","{id}")
+                .pathSegment("api","tags","{id}")
                 .buildAndExpand(textTag.getId()).toUri())
             .build();  
     }

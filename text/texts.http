@@ -3,8 +3,8 @@ POST http://localhost:8081/api/texts
 Content-Type: application/json
 
 {
-    "name": "amogus",
-    "content": "SUS",
+    "name": "text1",
+    "content": "content",
     "tag_ids":[1,2,3,4]
 }
 ###
@@ -26,7 +26,7 @@ Content-Type: application/json
 ###
 GET http://localhost:8081/api/texts
 ###
-GET http://localhost:8081/api/texts/1
+GET http://localhost:8081/api/texts/2
 ###
 GET http://localhost:8081/api/tags/1
 

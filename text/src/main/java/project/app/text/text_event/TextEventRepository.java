@@ -26,13 +26,13 @@ public class TextEventRepository {
 
     public void delete(Text text){
         for(RestTemplate template : restTemplates){
-            template.delete("/texts/{text}", text.getId());
+            template.delete("/api/texts/{text}", text.getId());
         }
     }
 
     public void save(Text text){
         for(RestTemplate template : restTemplates){
-            template.postForLocation("/texts", PostTextEventRequest.entityToDtoMapper().apply(text));
+            template.postForLocation("/api/texts", PostTextEventRequest.entityToDtoMapper().apply(text));
         }
     }
 }

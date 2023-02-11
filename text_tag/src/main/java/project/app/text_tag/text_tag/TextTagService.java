@@ -7,14 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import project.app.text_tag.text_tag_event.TextTagEventRepository;
 
 @Service
 public class TextTagService {
     TextTagRepository repository;
+    TextTagEventRepository eventRepository;
 
     @Autowired
-    TextTagService(TextTagRepository repo){
+    TextTagService(TextTagRepository repo,TextTagEventRepository eventRepository){
         this.repository = repo;
+        this.eventRepository = eventRepository;
     }
 
     public List<TextTag> findAll(){
@@ -31,14 +34,15 @@ public class TextTagService {
 
     @Transactional
     public TextTag add(TextTag tag){
+        //TODO: Ochrone przed duplikatami w Controlerze trzeba dodac
+        eventRepository.save(tag);
         return repository.save(tag);
-        //TODO: event repository
     }
 
     @Transactional
     public void delete(TextTag tag){
-        repository.delete(tag);
-        //TODO: event repository    
+        eventRepository.delete(tag);
+        repository.delete(tag);    
     }
 
     @Transactional
@@ -47,6 +51,12 @@ public class TextTagService {
         .ifPresent(tag -> {
             tag.setName(new_tag.getName());
             tag.setDescription(new_tag.getDescription());
+            //TODO: if new_tag.getTexts.equals(tag.getTexts()) chyba git?
+            //Update wysyłany jeśli zmieniono texty w tagu
+            if(!new_tag.getTexts().equals(new_tag.getTexts())){
+                tag.setTexts(new_tag.getTexts());
+                eventRepository.update(new_tag);
+            }
         });
     }        
 }
