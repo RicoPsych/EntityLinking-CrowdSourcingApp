@@ -1,4 +1,4 @@
-package project.app.task_set.task_set;
+package project.app.ne_type.task_set;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,15 +11,12 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import project.app.task_set.ne_type.NamedEntityType;
-import project.app.task_set.text.Text;
-
+import project.app.ne_type.ne_type.NamedEntityType;
 
 
 @ToString
@@ -28,7 +25,6 @@ import project.app.task_set.text.Text;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 
 @Entity
 @Table(name="task_sets")
@@ -37,12 +33,6 @@ public class TaskSet implements Serializable {
     @Id
     @Column(name="task_set_id")
     private long id;
-
-    @ManyToMany
-    @JoinTable(name = "text", 
-    joinColumns = @JoinColumn(name="task_set_id"),
-    inverseJoinColumns = @JoinColumn(name = "text_id"))
-    private List<Text> texts;
 
     @ManyToMany
     @JoinTable(name = "named_entity_types", 

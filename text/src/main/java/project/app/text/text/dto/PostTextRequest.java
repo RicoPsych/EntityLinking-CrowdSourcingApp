@@ -33,7 +33,7 @@ public class PostTextRequest {
             .name(request.getName())
             .content(request.getContent())
             .tags(tagGetter.apply(request.getTag_ids()))
-            //.tasks(taskGetter.apply(request.getTask_ids()))
+            //TODO: .tasks(taskGetter.apply(request.getTask_ids()))
             .build();
     }
 }

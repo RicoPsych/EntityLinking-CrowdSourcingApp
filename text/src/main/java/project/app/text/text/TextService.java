@@ -61,7 +61,7 @@ public class TextService {
                 text.setName(new_text.getName());
                 text.setTags(new_text.getTags());
                 //text.setEntities(new_text.getEntities());
-                //text.setTasks(new_text.getTasks());
+                //text.setTaskSets(new_text.getTasks());
             });
     }        
 

@@ -1,4 +1,4 @@
-package project.app.text_tag.ne_type;
+package project.app.ne_type.ne_type;
 
 import java.io.Serializable;
 import java.util.List;
@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import project.app.text_tag.text_tag.TextTag;
+import project.app.ne_type.task_set.TaskSet;
 
 
 
@@ -31,15 +32,25 @@ import project.app.text_tag.text_tag.TextTag;
 
 @Entity
 @Table(name="named_entity_types")
-/*NamedEntityType entity representation for TextTag microservice*/
 public class NamedEntityType implements Serializable {
     @Id
     @Column(name="named_entity_type_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @ManyToMany(mappedBy = "namedEntityTypes")
-    @ToString.Exclude
+    @Column(name="named_entity_type_name")
+    private String name;
+
+    @Column(name="named_entity_type_description")
+    private String description;
+
+    //TODO:
+    @ManyToMany
     private List<TextTag> textTags;
 
+    @OneToMany//ManyToOne
+    private List<NamedEntityType> namedEntityTypes;
+
+    @ManyToMany 
+    private List<TaskSet> taskSets;
 }

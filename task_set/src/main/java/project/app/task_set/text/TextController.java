@@ -1,4 +1,5 @@
-package project.app.text.text;
+package project.app.task_set.text;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,29 +17,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import project.app.text.text.dto.*;
-import project.app.text.text_tag.TextTag;
-import project.app.text.text_tag.TextTagService;
+import project.app.task_set.task_set.TaskSet;
+import project.app.task_set.task_set.TaskSetService;
+import project.app.task_set.text.dto.*;
 
 @RestController
 @RequestMapping("api/texts")
 public class TextController {
     private TextService textService;
-    private TextTagService tagService;
-    
+    private TaskSetService taskSetService;
 
+    /**
+     * Autowired Constructor for Text representation Controller for TaskSet microservice
+     * @param service text representation service
+     * @param taskSetService task set service
+     */
     @Autowired
-    public TextController(TextService service,TextTagService tagService){
+    public TextController(TextService service,TaskSetService taskSetService){
         this.textService = service;
-        this.tagService = tagService;
-
+        this.taskSetService = taskSetService;
     }
 
-    @GetMapping
-    public ResponseEntity<GetTextsResponse> getTexts(){
-        return ResponseEntity.ok(GetTextsResponse.entityToDtoMapper().apply(textService.findAll()));
-    }
-
+    //TODO: Tests + Debugging
     @GetMapping("{id}")
     public ResponseEntity<GetTextResponse> getText(@PathVariable("id") Long id){
         Optional<Text> opt = textService.find(id);
@@ -52,19 +52,20 @@ public class TextController {
 
     @PostMapping
     public ResponseEntity<Void> postText(@RequestBody PostTextRequest rq, UriComponentsBuilder builder){
-        Text text = PostTextRequest.dtoToEntityMapper( 
-            tag_ids -> {
-            //if tag_ids == null -> tags = null;
-            List<TextTag> tags = new ArrayList<>();
-            for(Long id : tag_ids){
-                    Optional<TextTag> opt = tagService.find(id);
-                    if(opt.isPresent()){
-                        tags.add(opt.get());
-                    }
-                    /**If it doesnt find the tag just skips it TODO: */
+        Text text = PostTextRequest.dtoToEntityMapper(
+            taskSet_ids -> {
+                //if taskSet_ids == null -> taskSets = null;
+                List<TaskSet> taskSets = new ArrayList<>();
+                for(Long _id : taskSet_ids){
+                        Optional<TaskSet> _opt = taskSetService.find(_id);
+                        if(_opt.isPresent()){
+                            taskSets.add(_opt.get());
+                        }
+                        /**If it doesnt find the tag just skips it TODO:PostText task_set */
+                }
+                return taskSets;
             }
-            return tags;
-        })
+        )
         .apply(rq);
         text = textService.add(text);
         return ResponseEntity
@@ -93,19 +94,19 @@ public class TextController {
             return ResponseEntity.notFound().build();
         }
 
-        textService.update(PutTextRequest.dtoToEntityUpdater(
-            tag_ids -> {
-                //if tag_ids == null -> tags = null;
-                List<TextTag> tags = new ArrayList<>();
-                for(Long _id : tag_ids){
-                    Optional<TextTag> _opt = tagService.find(_id);
-                    if(_opt.isPresent()){
-                        tags.add(_opt.get());
-                    }
-                    /**If it doesnt find the tag just skips it TODO: brak info o niedodanych tagach*/
+        textService.update(PutTextRequest.dtoToEntityMapper(            
+            taskSet_ids -> {
+                //if taskSet_ids == null -> taskSets = null;
+                List<TaskSet> taskSets = new ArrayList<>();
+                for(Long _id : taskSet_ids){
+                        Optional<TaskSet> _opt = taskSetService.find(_id);
+                        if(_opt.isPresent()){
+                            taskSets.add(_opt.get());
+                        }
+                        /**If it doesnt find the tag just skips it TODO:PostText task_set */
                 }
-                return tags;
-            }).apply(opt.get(),rq));
+            return taskSets;
+        }).apply(opt.get(),rq));
 
         return ResponseEntity.accepted().build();
     }

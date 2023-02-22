@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Singular;
 import lombok.ToString;
-//import project.app.text.text.Text;
+import project.app.text.text.Text;
 
 
 @Builder
@@ -24,9 +24,6 @@ import lombok.ToString;
 @NoArgsConstructor
 public class GetTextsResponse {
 
-    /** */
-
-    
     @ToString
     @Setter
     @EqualsAndHashCode
@@ -34,24 +31,24 @@ public class GetTextsResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    private static class Text{
+    private static class _Text{
         String name;
         Long id;
         //TODO: TAGI
     }
 
     @Singular
-    private List<Text> texts;
+    private List<_Text> texts;
 
-    public static Function<Collection<project.app.text.text.Text>,GetTextsResponse> entityToDtoMapper(){
+    public static Function<Collection<Text>,GetTextsResponse> entityToDtoMapper(){
         return texts ->{
             GetTextsResponseBuilder response = GetTextsResponse.builder();
             texts.stream()
-                .map(text -> Text.builder()
+                .map(text -> _Text.builder()
                     .name(text.getName())
                     .id(text.getId())
                     .build())
-                .forEach(response::text); ///TODO TAGI
+                .forEach(response::text); ///TODO TAGI i task sety
             return response.build();
         };
     }
