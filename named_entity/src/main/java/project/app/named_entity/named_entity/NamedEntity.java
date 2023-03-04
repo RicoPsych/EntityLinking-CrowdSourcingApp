@@ -42,6 +42,7 @@ public class NamedEntity implements Serializable{
     @Column(name="index_end")
     private Long indexEnd;
 
+    //Knowledge Base link
     @Column(name="kb_link",nullable = true)
     private String kb_link;
     
@@ -49,6 +50,7 @@ public class NamedEntity implements Serializable{
     @JoinColumn(name="named_entity_type_id",nullable = true)
     private NamedEntityType type;
 
+    //ID?
     @ManyToOne
     @JoinColumn(name="text_id")
     private Text text;

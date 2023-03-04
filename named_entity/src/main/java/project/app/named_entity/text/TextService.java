@@ -36,11 +36,11 @@ public class TextService {
         textRepository.delete(text);
     }
   
-    @Transactional
-    public void update(Text newText){
-        textRepository.findById(newText.getId())
-        .ifPresent(text->{
-            text.setNamedEntities(newText.getNamedEntities());
-        });
-    }
+    // @Transactional
+    // public void update(Text newText){
+    //     textRepository.findById(newText.getId())
+    //     .ifPresent(text->{
+    //         text.setNamedEntities(newText.getNamedEntities());
+    //     });
+    // }
 }

@@ -26,17 +26,17 @@ public class PostNamedEntityRequest {
     private long indexStart;
     private long indexEnd;
 
-    //private long text_id;
-    private String kb_link;
-    private long type_id;
+    //private long textId;
+    private String kbLink;
+    private long typeId;
 
     public static Function<PostNamedEntityRequest, NamedEntity> dtoToEntityMapper(Supplier<Text> textGetter,Function<Long,NamedEntityType> typeGetter){
         return request -> NamedEntity.builder()
             .indexStart(request.getIndexStart())
             .indexEnd(request.getIndexEnd())
-            .kb_link(request.getKb_link())
+            .kb_link(request.getKbLink())
             .text(textGetter.get())
-            .type(typeGetter.apply(request.getType_id()))
+            .type(typeGetter.apply(request.getTypeId()))
             .build();
 
     }

@@ -35,4 +35,13 @@ public class NamedEntityTypeService {
     public void delete(NamedEntityType type){
         repository.delete(type);
     }
+    
+    //TODO: niepotrzebne
+    // @Transactional
+    // public void update(NamedEntityType newType){
+    //     repository.findById(newType.getId())
+    //         .ifPresent( type -> {
+    //             type.setNamedEntities(newType.getNamedEntities());
+    //         });
+    // }
 }

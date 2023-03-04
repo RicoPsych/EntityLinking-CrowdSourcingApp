@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,12 +56,12 @@ public class NamedEntityTypeController {
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteType(@PathVariable("id") Long id){
         Optional<NamedEntityType> opt = service.find(id);
-        if (opt.isPresent()){
-            service.delete(opt.get());
-            return ResponseEntity.accepted().build();
-        }
-        else{
+        if (opt.isEmpty()){
             return ResponseEntity.notFound().build();
         }
+        service.delete(opt.get());
+        return ResponseEntity.accepted().build();
+        
     }
+
 }

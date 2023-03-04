@@ -26,16 +26,24 @@ public class GetNamedEntityResponse {
 
     private long text_id;
     private String kb_link;
-    private long type_id;
+    private Long type_id;
 
     public static Function<NamedEntity,GetNamedEntityResponse> entityToDtoMapper(){
-        return entity -> GetNamedEntityResponse.builder()
-            .id(entity.getId())
-            .indexStart(entity.getIndexStart())
-            .indexEnd(entity.getIndexEnd())
-            .text_id(entity.getText().getId())
-            .kb_link(entity.getKb_link())
-            .type_id(entity.getType().getId())
-            .build();
+        return entity -> {
+
+            //type is nullable
+            Long type = null;
+            if (entity.getType() != null)
+                type = entity.getType().getId();
+
+            return GetNamedEntityResponse.builder()
+                .id(entity.getId())
+                .indexStart(entity.getIndexStart())
+                .indexEnd(entity.getIndexEnd())
+                .text_id(entity.getText().getId())
+                .kb_link(entity.getKb_link())
+                .type_id(type)
+                .build();
+        };
     }
 }

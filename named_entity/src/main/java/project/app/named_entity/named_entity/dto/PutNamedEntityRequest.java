@@ -24,18 +24,15 @@ import project.app.named_entity.text.Text;
 public class PutNamedEntityRequest {
     private long indexStart;
     private long indexEnd;
+    private String kbLink;
+    private long typeId;
 
-    private long text_id;
-    private String kb_link;
-    private long type_id;
-
-    public static BiFunction<NamedEntity,PutNamedEntityRequest, NamedEntity> dtoToEntityUpdater(Supplier<Text> textGetter,Function<Long,NamedEntityType> typeGetter){
+    public static BiFunction<NamedEntity,PutNamedEntityRequest, NamedEntity> dtoToEntityUpdater(Function<Long,NamedEntityType> typeGetter){
         return (entity,request) -> {
             entity.setIndexStart(request.getIndexStart());
             entity.setIndexEnd(request.getIndexEnd());
-            entity.setKb_link(request.getKb_link());
-            entity.setText(textGetter.get());
-            entity.setType(typeGetter.apply(request.getType_id()));
+            entity.setKb_link(request.getKbLink());
+            entity.setType(typeGetter.apply(request.getTypeId()));
             return entity;
         };
     }

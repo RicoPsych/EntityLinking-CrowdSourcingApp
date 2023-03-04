@@ -11,21 +11,17 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import project.app.named_entity.named_entity.NamedEntity;
-import project.app.named_entity.named_entity.NamedEntityService;
 import project.app.named_entity.text.dto.*;
 
 @RestController
 @RequestMapping("api/texts")
 public class TextController {
     private TextService textService;
-    private NamedEntityService entityService;
 
     @Autowired
     public TextController(TextService service){
@@ -40,26 +36,27 @@ public class TextController {
             return ResponseEntity.ok(GetTextResponse.entityToDtoMapper().apply(opt.get()));
         }
         else{
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().header("Description", "Text not found").build();
         }
     }
 
     @PostMapping
     public ResponseEntity<Void> postText(@RequestBody PostTextRequest rq, UriComponentsBuilder builder){
         Text text = PostTextRequest.dtoToEntityMapper(
-            entities_ids -> {
-                //if type_ids == null -> types = null;
-                List<NamedEntity> entities = new ArrayList<>();
-                for(Long _id : entities_ids){
-                        Optional<NamedEntity> _opt = entityService.find(_id);
-                        if(_opt.isPresent()){
-                            entities.add(_opt.get());
-                        }
-                        /**If it doesnt find the tag just skips it TODO:postTaskSet */
-                }
-                return entities;
-            })
-        .apply(rq);
+            // TODO: BEZ WSTAWIANIA TEKSTU Z PODŁĄCZONYMI ENCJAMI
+            // entities_ids -> {
+            //     //if type_ids == null -> types = null;
+            //     List<NamedEntity> entities = new ArrayList<>();
+            //     for(Long _id : entities_ids){
+            //             Optional<NamedEntity> _opt = entityService.find(_id);
+            //             if(_opt.isPresent()){
+            //                 entities.add(_opt.get());
+            //             }
+            //             /**If it doesnt find the tag just skips it TODO:postTaskSet */
+            //     }
+            //     return entities;
+            // }
+        ).apply(rq);
         text = textService.add(text);
         return ResponseEntity
             .created(builder
@@ -76,33 +73,33 @@ public class TextController {
             return ResponseEntity.accepted().build();
         }
         else{
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().header("Description", "Text not found").build();
         }
     }
 
-    //TODO:
-    @PutMapping("{id}")
-    public ResponseEntity<Void> putText(@PathVariable("id") Long id, @RequestBody PutTextRequest rq, UriComponentsBuilder builder){
-        Optional<Text> opt = textService.find(id);
-        if (opt.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }
+    //TODO: chyba nie potrzebne
+    // @PutMapping("{id}")
+    // public ResponseEntity<Void> putText(@PathVariable("id") Long id, @RequestBody PutTextRequest rq, UriComponentsBuilder builder){
+    //     Optional<Text> opt = textService.find(id);
+    //     if (opt.isEmpty()){
+    //         return ResponseEntity.notFound().build();
+    //     }
 
-        textService.update(PutTextRequest.dtoToEntityMapper(
-            entities_ids -> {
-                //if type_ids == null -> types = null;
-                List<NamedEntity> entities = new ArrayList<>();
-                for(Long _id : entities_ids){
-                        Optional<NamedEntity> _opt = entityService.find(_id);
-                        if(_opt.isPresent()){
-                            entities.add(_opt.get());
-                        }
-                        /**If it doesnt find the tag just skips it TODO:postTaskSet */
-                }
-                return entities;
-            }).apply(opt.get(), rq));
+    //     textService.update(PutTextRequest.dtoToEntityUpdater(
+    //         entities_ids -> {
+    //             //if type_ids == null -> types = null;
+    //             List<NamedEntity> entities = new ArrayList<>();
+    //             for(Long _id : entities_ids){
+    //                     Optional<NamedEntity> _opt = entityService.find(_id);
+    //                     if(_opt.isPresent()){
+    //                         entities.add(_opt.get());
+    //                     }
+    //                     /**If it doesnt find the tag just skips it TODO:postTaskSet */
+    //             }
+    //             return entities;
+    //         }).apply(opt.get(), rq));
 
 
-        return ResponseEntity.accepted().build();  
-    }
+    //     return ResponseEntity.accepted().build();  
+    // }
 }

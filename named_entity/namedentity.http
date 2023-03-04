@@ -5,9 +5,9 @@ Content-Type: application/json
 {
     "indexStart":1,
     "indexEnd":2,
-    "text_id":1,
-    "kb_link":"link",
-    "type_id":1
+    "textId":1,
+    "kbLink":"link",
+    "typeId":1
 }
 ###
 POST http://localhost:8084/api/texts
@@ -22,7 +22,7 @@ Content-Type: application/json
 {
 }
 ###
-GET http://localhost:8084/api/texts/1
+GET http://localhost:8084/api/texts/1/entities
 
 ###
 GET http://localhost:8084/api/texts/1/entities/1
@@ -39,9 +39,8 @@ Content-Type: application/json
 {
     "indexStart":3,
     "indexEnd":5,
-    "text_id":1,
-    "kb_link":"nowy link",
-    "type_id":1
+    "kbLink":"nowy link",
+    "typeId":1
 }
 
 ###

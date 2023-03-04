@@ -19,7 +19,9 @@ import project.app.named_entity.named_entity.dto.GetNamedEntitiesResponse;
 import project.app.named_entity.named_entity.dto.GetNamedEntityResponse;
 import project.app.named_entity.named_entity.dto.PostNamedEntityRequest;
 import project.app.named_entity.named_entity.dto.PutNamedEntityRequest;
+import project.app.named_entity.named_entity_type.NamedEntityType;
 import project.app.named_entity.named_entity_type.NamedEntityTypeService;
+import project.app.named_entity.text.Text;
 import project.app.named_entity.text.TextService;
 
 @RestController
@@ -38,8 +40,13 @@ public class NamedEntityController {
 
     @GetMapping
     public ResponseEntity<GetNamedEntitiesResponse> getNamedEntities(@PathVariable("text_id") Long text_id){
-        List<NamedEntity> entities = namedEntityService.findAll();
-            return ResponseEntity.ok(GetNamedEntitiesResponse.entityToDtoMapper().apply(entities));
+        Optional<Text> opt = textService.find(text_id);
+        if( opt.isEmpty()){
+            return ResponseEntity.notFound().header("Description", "Text not found").build();
+        }
+
+        List<NamedEntity> entities = namedEntityService.findByText(opt.get());
+        return ResponseEntity.ok(GetNamedEntitiesResponse.entityToDtoMapper().apply(entities));
     }
 
     @GetMapping("{id}")
@@ -49,14 +56,25 @@ public class NamedEntityController {
             return ResponseEntity.ok(GetNamedEntityResponse.entityToDtoMapper().apply(opt.get()));
         }
         else{
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().header("Description", "Named Entity not found").build();
         }
     }
 
     @PostMapping
     public ResponseEntity<Void> postNamedEntity(@RequestBody PostNamedEntityRequest rq,@PathVariable("text_id") Long text_id ,UriComponentsBuilder builder){
-        NamedEntity entity = PostNamedEntityRequest.dtoToEntityMapper(() -> textService.find(text_id).get(), (type_id)-> namedEntityTypeService.find(type_id).get() ) //TODO: TYPE GETTER
-            .apply(rq);
+        Optional<Text> opt = textService.find(text_id);
+        if(opt.isEmpty()){
+            return ResponseEntity.notFound().header("Description", "Text not found").build();
+        }
+        
+        NamedEntity entity = PostNamedEntityRequest.dtoToEntityMapper(() -> opt.get(), 
+        type_id-> {
+            Optional<NamedEntityType> _opt = namedEntityTypeService.find(type_id);
+            if(_opt.isEmpty()){
+                return null;
+            }
+            return _opt.get();
+        }).apply(rq);
             entity = namedEntityService.add(entity);
         return ResponseEntity
             .created(builder
@@ -68,26 +86,31 @@ public class NamedEntityController {
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteNamedEntity(@PathVariable("id") Long id){
         Optional<NamedEntity> opt = namedEntityService.find(id);
-        if (opt.isPresent()){
-            //delete entity
-            namedEntityService.delete(opt.get());
-            return ResponseEntity.accepted().build();
+        if (opt.isEmpty()){
+            return ResponseEntity.notFound().header("Description", "Entity not found").build();
+            
         }
-        else{
-            return ResponseEntity.notFound().build();
-        }
+        //delete entity
+        namedEntityService.delete(opt.get());
+        return ResponseEntity.accepted().build();
     }
 
     @PutMapping("{id}")
     public ResponseEntity<Void> updateNamedEntity(@RequestBody PutNamedEntityRequest rq,@PathVariable("id") Long id,@PathVariable("text_id") Long text_id){
         Optional<NamedEntity> opt = namedEntityService.find(id);
-        if (opt.isPresent()){
-            namedEntityService.update(PutNamedEntityRequest.dtoToEntityUpdater(()->textService.find(text_id).get(),(type_id)-> namedEntityTypeService.find(type_id).get())//TODO: TYPE GETTER
-            .apply(opt.get(),rq));
-            return ResponseEntity.accepted().build();
+        if (opt.isEmpty()){
+            return ResponseEntity.notFound().header("Description", "Named Entity not found").build();
         }
-        else{
-            return ResponseEntity.notFound().build();
-        }
+
+        namedEntityService.update(PutNamedEntityRequest.dtoToEntityUpdater(type_id-> {
+            Optional<NamedEntityType> _opt = namedEntityTypeService.find(type_id);
+            if (_opt.isEmpty()){
+                return null;
+            }
+            return _opt.get();
+        })
+        .apply(opt.get(),rq));
+        return ResponseEntity.accepted().build();
+
     }
 }

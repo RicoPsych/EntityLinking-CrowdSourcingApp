@@ -23,12 +23,12 @@ import project.app.named_entity.text.Text;
 @NoArgsConstructor
 public class PostTextRequest {
     private long id;
-    private long[] namedEntities;
+    //private long[] namedEntities;
 
-    public static Function<PostTextRequest, Text> dtoToEntityMapper(Function<long[],List<NamedEntity>> entityGetter){
+    public static Function<PostTextRequest, Text> dtoToEntityMapper(/*Function<long[],List<NamedEntity>> entityGetter*/){
 
         return request -> Text.builder()
-            .namedEntities(entityGetter.apply(request.getNamedEntities()))
+            //.namedEntities(entityGetter.apply(request.getNamedEntities()))
             .build();
     }
 }
