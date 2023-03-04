@@ -1,5 +1,6 @@
-package project.app.text.text_tag.dto;
+package project.app.ne_type.text_tag.dto;
 
+import java.util.List;
 import java.util.function.Function;
 
 import lombok.AllArgsConstructor;
@@ -9,7 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import project.app.text.text_tag.TextTag;
+import project.app.ne_type.ne_type.NamedEntityType;
+import project.app.ne_type.text_tag.TextTag;
 
 
 @Builder
@@ -21,13 +23,12 @@ import project.app.text.text_tag.TextTag;
 @NoArgsConstructor
 
 public class PostTextTagRequest {
-    private long id;
+    private long[] types;
 
-    public static Function<PostTextTagRequest, TextTag> dtoToEntityMapper(){
+    public static Function<PostTextTagRequest, TextTag> dtoToEntityMapper(Function<long[],List<NamedEntityType>> typeGetter){
         return request -> TextTag.builder()
-            .texts()
-            .types()
-            //TODO: types and texts
+            .types(typeGetter.apply(request.getTypes()))
+        //TODO: types and texts
             .build();
 
     }

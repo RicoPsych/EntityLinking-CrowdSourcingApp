@@ -1,4 +1,4 @@
-package project.app.task_set.task_set;
+package project.app.text.task_set;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,58 +16,53 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import project.app.task_set.ne_type.NamedEntityType;
-import project.app.task_set.ne_type.NamedEntityTypeService;
-import project.app.task_set.task_set.dto.*;
-import project.app.task_set.text.Text;
-import project.app.task_set.text.TextService;
+import project.app.text.task_set.dto.*;
+import project.app.text.text.Text;
+import project.app.text.text.TextService;
 
 
 @RestController
 @RequestMapping("api/task_sets")
 public class TaskSetController {
     private TaskSetService taskSetService;
-    private NamedEntityTypeService namedEntityTypeService;
     private TextService textService;
 
     /**
      * Autowired Constructor for TaskSetController
      * @param taskSetService 
-     * @param namedEntityTypeService
      * @param textService
      */
     @Autowired
-    public TaskSetController(TaskSetService taskSetService, NamedEntityTypeService namedEntityTypeService, TextService textService ){
+    public TaskSetController(TaskSetService taskSetService, TextService textService ){
         this.taskSetService = taskSetService;
-        this.namedEntityTypeService = namedEntityTypeService;
         this.textService = textService;
     }
 
     /**
-     * TODO: names?
-     * Lists all TaskSets Ids
-     * @return response with list of TaskSets
-     */
-    @GetMapping
-    public ResponseEntity<GetTaskSetsResponse> getTaskSets(){
-        return ResponseEntity.ok(GetTaskSetsResponse.entityToDtoMapper().apply(taskSetService.findAll()));
-    }
+    //  * TODO: names?
+    //  * Lists all TaskSets Ids
+    //  * @return response with list of TaskSets
+    //  */
+    // @GetMapping
+    // public ResponseEntity<GetTaskSetsResponse> getTaskSets(){
+    //     return ResponseEntity.ok(GetTaskSetsResponse.entityToDtoMapper().apply(taskSetService.findAll()));
+    // }
 
-    /**
-     * Gets Task Set specified with id
-     * @param id id of Task Set
-     * @return response with Task Set parameters (Code 200) or Error 404 
-     */
-    @GetMapping("{id}")
-    public ResponseEntity<GetTaskSetResponse> getTaskSet(@PathVariable("id") Long id){
-        Optional<TaskSet> opt = taskSetService.find(id);
-        if (opt.isPresent()){
-            return ResponseEntity.ok(GetTaskSetResponse.entityToDtoMapper().apply(opt.get()));
-        }
-        else{
-            return ResponseEntity.notFound().build();
-        }
-    }
+    // /**
+    //  * Gets Task Set specified with id
+    //  * @param id id of Task Set
+    //  * @return response with Task Set parameters (Code 200) or Error 404 
+    //  */
+    // @GetMapping("{id}")
+    // public ResponseEntity<GetTaskSetResponse> getTaskSet(@PathVariable("id") Long id){
+    //     Optional<TaskSet> opt = taskSetService.find(id);
+    //     if (opt.isPresent()){
+    //         return ResponseEntity.ok(GetTaskSetResponse.entityToDtoMapper().apply(opt.get()));
+    //     }
+    //     else{
+    //         return ResponseEntity.notFound().build();
+    //     }
+    // }
 
     /**
      * Creates new Task Set with given request
@@ -89,18 +84,6 @@ public class TaskSetController {
                     /**If it doesnt find the tag just skips it TODO:postTaskSet */
             }
             return texts;
-        },
-        type_ids -> {
-            //if type_ids == null -> types = null;
-            List<NamedEntityType> types = new ArrayList<>();
-            for(Long _id : type_ids){
-                    Optional<NamedEntityType> _opt = namedEntityTypeService.find(_id);
-                    if(_opt.isPresent()){
-                        types.add(_opt.get());
-                    }
-                    /**If it doesnt find the tag just skips it TODO:postTaskSet */
-            }
-            return types;
         })
         .apply(rq);
         task = taskSetService.add(task);
@@ -156,18 +139,6 @@ public class TaskSetController {
                         /**If it doesnt find the tag just skips it TODO: updateTaskSet*/
                 }
                 return texts;
-            },
-            type_ids -> {
-                //if type_ids == null -> types = null;
-                List<NamedEntityType> types = new ArrayList<>();
-                for(Long _id : type_ids){
-                        Optional<NamedEntityType> _opt = namedEntityTypeService.find(_id);
-                        if(_opt.isPresent()){
-                            types.add(_opt.get());
-                        }
-                        /**If it doesnt find the tag just skips it TODO: updateTaskSet*/
-                }
-                return types;
             })
             .apply(opt.get(),rq));
 

@@ -3,7 +3,6 @@ package project.app.text.text;
 import java.io.Serializable;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,7 +12,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +20,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import project.app.text.task_set.TaskSet;
 import project.app.text.text_tag.TextTag;
 
 
@@ -47,8 +46,6 @@ public class Text implements Serializable{
 
     @Column(name="content")
     private String content;
-
-    // private List<TaskSet> task_set;
     
     // @OneToMany(mappedBy = "text") //, fetch = FetchType.EAGER
     // private List<NamedEntity> entities;
@@ -58,5 +55,12 @@ public class Text implements Serializable{
         name = "texts_tags",
         joinColumns = @JoinColumn(name= "text_id"),
         inverseJoinColumns = @JoinColumn(name= "text_tag_id"))
-    private List<TextTag> tags;
+    private List<TextTag> textTags;
+ 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "texts_task_sets",
+        joinColumns = @JoinColumn(name= "text_id"),
+        inverseJoinColumns = @JoinColumn(name= "task_set_id"))
+    private List<TaskSet> taskSets;
 }

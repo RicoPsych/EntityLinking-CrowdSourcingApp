@@ -29,15 +29,18 @@ public class TextService {
     @Transactional
     public Text add(Text text){
         return textRepository.save(text);
-
-        //TODO: event repository
     }
 
     @Transactional
     public void delete(Text text){
         textRepository.delete(text);
-        //TODO: event repository    
     }
   
-
+    @Transactional
+    public void update(Text newText){
+        textRepository.findById(newText.getId())
+        .ifPresent(text->{
+            text.setNamedEntities(newText.getNamedEntities());
+        });
+    }
 }

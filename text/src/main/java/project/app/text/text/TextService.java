@@ -59,7 +59,7 @@ public class TextService {
             .ifPresent(text -> {
                 text.setContent(new_text.getContent());
                 text.setName(new_text.getName());
-                text.setTags(new_text.getTags());
+                text.setTextTags(new_text.getTextTags());
                 //text.setEntities(new_text.getEntities());
                 //text.setTaskSets(new_text.getTasks());
             });

@@ -3,7 +3,6 @@ package project.app.text_tag.text_tag_event;
 import java.util.List;
 import java.util.function.Function;
 
-import org.springframework.web.servlet.RequestToViewNameTranslator;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

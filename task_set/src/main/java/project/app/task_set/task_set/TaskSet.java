@@ -40,14 +40,14 @@ public class TaskSet implements Serializable {
 
     @ManyToMany
     @JoinTable(name = "text", 
-    joinColumns = @JoinColumn(name="task_set_id"),
-    inverseJoinColumns = @JoinColumn(name = "text_id"))
+        joinColumns = @JoinColumn(name="task_set_id"),
+        inverseJoinColumns = @JoinColumn(name = "text_id"))
     private List<Text> texts;
 
     @ManyToMany
     @JoinTable(name = "named_entity_types", 
-    joinColumns = @JoinColumn(name="task_set_id"),
-    inverseJoinColumns = @JoinColumn(name = "named_entity_type_id"))
+        joinColumns = @JoinColumn(name="task_set_id"),
+        inverseJoinColumns = @JoinColumn(name = "named_entity_type_id"))
     private List<NamedEntityType> namedEntityTypes;
 
 }

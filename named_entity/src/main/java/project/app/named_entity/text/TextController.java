@@ -1,6 +1,8 @@
 package project.app.named_entity.text;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +17,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import project.app.named_entity.named_entity.NamedEntity;
+import project.app.named_entity.named_entity.NamedEntityService;
 import project.app.named_entity.text.dto.*;
 
 @RestController
 @RequestMapping("api/texts")
 public class TextController {
     private TextService textService;
-    
+    private NamedEntityService entityService;
 
     @Autowired
     public TextController(TextService service){
@@ -42,7 +46,19 @@ public class TextController {
 
     @PostMapping
     public ResponseEntity<Void> postText(@RequestBody PostTextRequest rq, UriComponentsBuilder builder){
-        Text text = PostTextRequest.dtoToEntityMapper()
+        Text text = PostTextRequest.dtoToEntityMapper(
+            entities_ids -> {
+                //if type_ids == null -> types = null;
+                List<NamedEntity> entities = new ArrayList<>();
+                for(Long _id : entities_ids){
+                        Optional<NamedEntity> _opt = entityService.find(_id);
+                        if(_opt.isPresent()){
+                            entities.add(_opt.get());
+                        }
+                        /**If it doesnt find the tag just skips it TODO:postTaskSet */
+                }
+                return entities;
+            })
         .apply(rq);
         text = textService.add(text);
         return ResponseEntity
@@ -64,4 +80,29 @@ public class TextController {
         }
     }
 
+    //TODO:
+    @PutMapping("{id}")
+    public ResponseEntity<Void> putText(@PathVariable("id") Long id, @RequestBody PutTextRequest rq, UriComponentsBuilder builder){
+        Optional<Text> opt = textService.find(id);
+        if (opt.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+
+        textService.update(PutTextRequest.dtoToEntityMapper(
+            entities_ids -> {
+                //if type_ids == null -> types = null;
+                List<NamedEntity> entities = new ArrayList<>();
+                for(Long _id : entities_ids){
+                        Optional<NamedEntity> _opt = entityService.find(_id);
+                        if(_opt.isPresent()){
+                            entities.add(_opt.get());
+                        }
+                        /**If it doesnt find the tag just skips it TODO:postTaskSet */
+                }
+                return entities;
+            }).apply(opt.get(), rq));
+
+
+        return ResponseEntity.accepted().build();  
+    }
 }

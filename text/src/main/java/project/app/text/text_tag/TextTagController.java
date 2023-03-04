@@ -63,12 +63,12 @@ public class TextTagController {
             //delete connection to the tag
             for(Text text : textService.findByTag(opt.get())){                
                 List<TextTag> new_tags = new ArrayList<>();
-                for (TextTag tag : text.getTags()) {
+                for (TextTag tag : text.getTextTags()) {
                     if(tag.getId() != opt.get().getId())
                         new_tags.add(textTagService.find(tag.getId()).get());
                 }
 
-                text.setTags(new_tags);
+                text.setTextTags(new_tags);
                 textService.update(text);
             }
             //delete tag

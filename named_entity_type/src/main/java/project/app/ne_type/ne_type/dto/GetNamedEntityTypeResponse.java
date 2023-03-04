@@ -19,14 +19,18 @@ import project.app.ne_type.ne_type.NamedEntityType;
 @Builder
 public class GetNamedEntityTypeResponse {
 
-    private long id;
-    //private String name;
-
+    private Long id;
+    private String name;
+    private String description;
+    private Long namedEntityTypeParent;
+    private Long[] namedEntityTypesChild; //????
 
     public static Function<NamedEntityType,GetNamedEntityTypeResponse> entityToDtoMapper(){
-        return namedEntityType -> GetNamedEntityTypeResponse.builder()
-                        .id(namedEntityType.getId())
-   //                     .name(namedEntityType.getName())
+        return type -> GetNamedEntityTypeResponse.builder()
+                        .id(type.getId())
+                        .name(type.getName())
+                        .description(type.getDescription())
+                        .namedEntityTypeParent(type.getNamedEntityTypeParent().getId())
                         .build();
     }
 }

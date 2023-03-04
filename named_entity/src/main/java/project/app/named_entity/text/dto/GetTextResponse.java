@@ -25,7 +25,7 @@ public class GetTextResponse {
 
     public static Function<Text,GetTextResponse> entityToDtoMapper(){
         return text -> GetTextResponse.builder()
-            .namedEntities(text.getEntities().stream().map(entity -> entity.getId()).toArray(Long[]::new))
+            .namedEntities(text.getNamedEntities().stream().map(entity -> entity.getId()).toArray(Long[]::new))
             .build();
     }
 }

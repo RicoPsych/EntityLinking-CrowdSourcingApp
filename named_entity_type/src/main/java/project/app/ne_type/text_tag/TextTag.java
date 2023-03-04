@@ -1,16 +1,15 @@
-package project.app.named_entity.text;
+package project.app.ne_type.text_tag;
 
 import java.io.Serializable;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,8 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import project.app.named_entity.named_entity.NamedEntity;
-
+import project.app.ne_type.ne_type.NamedEntityType;
 
 @ToString
 @Setter
@@ -31,14 +29,14 @@ import project.app.named_entity.named_entity.NamedEntity;
 @Builder
 
 @Entity
-@Table(name="texts")
-public class Text implements Serializable{
+@Table(name="text_tags")
+public class TextTag implements Serializable{
+
     @Id
+    @Column(name="text_tag_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="text_id")
     private long id;
 
-    @OneToMany(mappedBy = "text") //, fetch = FetchType.EAGER ,cascade = CascadeType.
-    private List<NamedEntity> namedEntities;
-
+    @ManyToMany(mappedBy = "textTags")
+    private List<NamedEntityType> types;
 }
