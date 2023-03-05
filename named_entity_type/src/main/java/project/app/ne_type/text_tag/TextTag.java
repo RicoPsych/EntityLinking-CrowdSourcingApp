@@ -38,5 +38,5 @@ public class TextTag implements Serializable{
     private long id;
 
     @ManyToMany(mappedBy = "textTags")
-    private List<NamedEntityType> types;
+    private List<NamedEntityType> namedEntityTypes;
 }

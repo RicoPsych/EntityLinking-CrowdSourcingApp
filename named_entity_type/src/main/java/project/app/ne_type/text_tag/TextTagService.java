@@ -10,7 +10,7 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class TextTagService {
-    TextTagRepository repository;
+    private TextTagRepository repository;
 
     @Autowired
     TextTagService(TextTagRepository repo){
@@ -21,9 +21,9 @@ public class TextTagService {
         return repository.findAll();    
     }
     
-    public Optional<TextTag> findByName(String name){
-        return repository.findByName(name);
-    }
+    // public Optional<TextTag> findByName(String name){
+    //     return repository.findByName(name);
+    // }
 
     public Optional<TextTag> find(Long id){
         return repository.findById(id);
@@ -44,10 +44,8 @@ public class TextTagService {
     public void update(TextTag new_tag){
         repository.findById(new_tag.getId())
         .ifPresent(tag -> {
-            //TODO: if new_tag.getTexts.equals(tag.getTexts()) chyba git?
-            //Update wysyłany jeśli zmieniono texty w tagu
-            if(!new_tag.getTypes().equals(new_tag.getTypes())){
-                tag.setTypes(new_tag.getTypes());
+            if(!new_tag.getNamedEntityTypes().equals(new_tag.getNamedEntityTypes())){
+                tag.setNamedEntityTypes(new_tag.getNamedEntityTypes());
             }
         });
     }        

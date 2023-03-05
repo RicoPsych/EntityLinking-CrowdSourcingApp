@@ -37,11 +37,9 @@ public class NamedEntityTypeEventRepository {
         }
     }
 
-        //TODO:POST dla związków też (lista) dokończyć!
     public void save(NamedEntityType type){
         for(RestTemplate template : restTemplates){
             template.postForLocation("/api/netypes", PostNamedEntityTypeEventRequest.entityToDtoMapper().apply(type));
-        //    template.postForLocation("/tags", PostTextTagEventRequest.entityToDtoMapper().apply(tag));
         }
     }
 }

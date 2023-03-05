@@ -61,12 +61,11 @@ public class TaskSetController {
     @GetMapping("{id}")
     public ResponseEntity<GetTaskSetResponse> getTaskSet(@PathVariable("id") Long id){
         Optional<TaskSet> opt = taskSetService.find(id);
-        if (opt.isPresent()){
-            return ResponseEntity.ok(GetTaskSetResponse.entityToDtoMapper().apply(opt.get()));
+        if (opt.isEmpty()){
+            return ResponseEntity.notFound().header("Description", "Task not found").build();
         }
-        else{
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(GetTaskSetResponse.entityToDtoMapper().apply(opt.get()));
+
     }
 
     /**
@@ -121,13 +120,11 @@ public class TaskSetController {
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteTaskSet(@PathVariable("id") Long id){
         Optional<TaskSet> opt = taskSetService.find(id);
-        if (opt.isPresent()){
-            taskSetService.delete(opt.get());
-            return ResponseEntity.accepted().build();
-        }
-        else{
-            return ResponseEntity.notFound().build();
-        }
+        if (opt.isEmpty()){
+            return ResponseEntity.notFound().header("Description", "Task not found").build();
+        }            
+        taskSetService.delete(opt.get());
+        return ResponseEntity.accepted().build();
     }
 
     /**
@@ -140,13 +137,12 @@ public class TaskSetController {
     public ResponseEntity<Void> updateTaskSet(@PathVariable("id") Long id,@RequestBody PutTaskSetRequest rq){
         Optional<TaskSet> opt = taskSetService.find(id);
         if (opt.isEmpty()){
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().header("Description", "Task not found").build();
         }
 
 
         taskSetService.update(PutTaskSetRequest.dtoToEntityUpdater( 
             text_ids -> {
-                //if text_ids == null -> texts = null;
                 List<Text> texts = new ArrayList<>();
                 for(Long _id : text_ids){
                         Optional<Text> _opt = textService.find(_id);
@@ -158,7 +154,6 @@ public class TaskSetController {
                 return texts;
             },
             type_ids -> {
-                //if type_ids == null -> types = null;
                 List<NamedEntityType> types = new ArrayList<>();
                 for(Long _id : type_ids){
                         Optional<NamedEntityType> _opt = namedEntityTypeService.find(_id);
@@ -169,7 +164,7 @@ public class TaskSetController {
                 }
                 return types;
             })
-            .apply(opt.get(),rq));
+            .apply(opt.get(),rq),true);
 
         return ResponseEntity.accepted().build();
     }

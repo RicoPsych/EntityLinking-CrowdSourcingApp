@@ -68,32 +68,41 @@ public class TaskSetController {
 
     /**
      * Creates new Task Set with given request
-     * @param rq body of the request, includes Texts and Types(Classes)
-     * @param builder builder for uri?
+     * @param rq 
+     * @param builder builder for uri
      * @return void
      */
     @PostMapping
     public ResponseEntity<Void> postTaskSet(@RequestBody PostTaskSetRequest rq, UriComponentsBuilder builder){
-        TaskSet task = PostTaskSetRequest.dtoToEntityMapper( 
+        TaskSet taskSet = PostTaskSetRequest.dtoToEntityMapper( 
             type_ids -> {
-                //if type_ids == null -> types = null;
                 List<NamedEntityType> types = new ArrayList<>();
                 for(Long _id : type_ids){
                         Optional<NamedEntityType> _opt = namedEntityTypeService.find(_id);
+                        
                         if(_opt.isPresent()){
                             types.add(_opt.get());
                         }
                         /**If it doesnt find the tag just skips it TODO:postTaskSet */
                 }
                 return types;
-            })
-        .apply(rq);
-        task = taskSetService.add(task);
+            }
+        ).apply(rq);
+        taskSet = taskSetService.add(taskSet);
+
+        //Connect relationships in owning side
+        for(NamedEntityType type : taskSet.getNamedEntityTypes()){ //namedEntityTypeService.findByTaskSet()?
+        
+            List<TaskSet> newTaskSets = type.getTaskSets();
+            newTaskSets.add(taskSet);
+            type.setTaskSets(newTaskSets);
+            namedEntityTypeService.update(type, false);
+        }
 
         return ResponseEntity
             .created(builder
                 .pathSegment("api","task_sets","{id}")
-                .buildAndExpand(task.getId()).toUri())
+                .buildAndExpand(taskSet.getId()).toUri())
             .build();  
     }
 
@@ -107,13 +116,26 @@ public class TaskSetController {
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteTaskSet(@PathVariable("id") Long id){
         Optional<TaskSet> opt = taskSetService.find(id);
-        if (opt.isPresent()){
-            taskSetService.delete(opt.get());
-            return ResponseEntity.accepted().build();
+        if (opt.isEmpty()){
+            return ResponseEntity.notFound().header("Description", "Task not found").build();    
         }
-        else{
-            return ResponseEntity.notFound().build();
+
+        //Delete all relationships with NamedEntityTypes
+        for(NamedEntityType type : namedEntityTypeService.findByTaskSet(opt.get())){
+            List<TaskSet> newSets = new ArrayList<>();
+            
+            for (TaskSet set : type.getTaskSets()) {
+                if(set.getId() != opt.get().getId())
+                    newSets.add(taskSetService.find(set.getId()).get());
+            }
+
+            type.setTaskSets(newSets);
+            namedEntityTypeService.update(type,false);
         }
+
+        //delete taskSet after deleting relationships
+        taskSetService.delete(opt.get());
+        return ResponseEntity.accepted().build();
     }
 
     /**
@@ -127,24 +149,50 @@ public class TaskSetController {
     public ResponseEntity<Void> updateTaskSet(@PathVariable("id") Long id,@RequestBody PutTaskSetRequest rq){
         Optional<TaskSet> opt = taskSetService.find(id);
         if (opt.isEmpty()){
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().header("Description", "Task not found").build();
+        }
+
+        //TODO: UPDATE
+        //Delete relationships with sets in NEType side
+        for(NamedEntityType type : namedEntityTypeService.findByTaskSet(opt.get())){
+            List<TaskSet> newSets = new ArrayList<>();
+            
+            for (TaskSet set : type.getTaskSets()) {
+                if(set.getId() != opt.get().getId())
+                    newSets.add(taskSetService.find(set.getId()).get());
+            }
+
+            type.setTaskSets(newSets);
+            namedEntityTypeService.update(type,false);
         }
 
 
-        taskSetService.update(PutTaskSetRequest.dtoToEntityUpdater( 
-            type_ids -> {
-                //if type_ids == null -> types = null;
-                List<NamedEntityType> types = new ArrayList<>();
-                for(Long _id : type_ids){
-                        Optional<NamedEntityType> _opt = namedEntityTypeService.find(_id);
-                        if(_opt.isPresent()){
-                            types.add(_opt.get());
-                        }
-                        /**If it doesnt find the tag just skips it TODO: updateTaskSet*/
-                }
-                return types;
-            })
-            .apply(opt.get(),rq));
+        //TODO: CHYBA NIE POTRZEBNE, POWINNO SAMO SIE ZROBIĆ PO UPDATCIE OWNING SIDE'A        
+        
+        TaskSet taskSet = PutTaskSetRequest.dtoToEntityUpdater( 
+        type_ids -> {
+            //if type_ids == null -> types = null;
+            List<NamedEntityType> types = new ArrayList<>();
+            for(Long _id : type_ids){
+                    Optional<NamedEntityType> _opt = namedEntityTypeService.find(_id);
+                    if(_opt.isPresent()){
+                        types.add(_opt.get());
+                    }
+                    /**If it doesnt find the tag just skips it TODO: updateTaskSet*/
+            }
+            return types;
+        })
+        .apply(opt.get(),rq);
+        
+        
+        //Connect relationships in owning side
+        for(NamedEntityType type : taskSet.getNamedEntityTypes()){ //namedEntityTypeService.findByTaskSet()?
+        
+            List<TaskSet> newTaskSets = type.getTaskSets();
+            newTaskSets.add(taskSet);
+            type.setTaskSets(newTaskSets);
+            namedEntityTypeService.update(type, false);
+        }
 
         return ResponseEntity.accepted().build();
     }

@@ -27,8 +27,9 @@ public class TextTagController {
     private NamedEntityTypeService namedEntityTypeService;
 
     @Autowired
-    public TextTagController(TextTagService service){
-        textTagService = service;
+    public TextTagController(TextTagService service,NamedEntityTypeService namedEntityTypeService){
+        this.textTagService = service;
+        this.namedEntityTypeService = namedEntityTypeService;
         
     }
 
@@ -61,9 +62,19 @@ public class TextTagController {
                         /**If it doesnt find the tag just skips it TODO:UpdateType */
                 }
                 return _types;
-            }) 
-            .apply(rq);
+        }).apply(rq);
+
         textTag = textTagService.add(textTag);
+        
+        //Connect relationships in owning side
+        for(NamedEntityType type : textTag.getNamedEntityTypes()){
+
+            List<TextTag> newTextTags = type.getTextTags();
+            newTextTags.add(textTag);
+            type.setTextTags(newTextTags);
+            namedEntityTypeService.update(type, false);
+        }
+
         return ResponseEntity
             .created(builder
                 .pathSegment("api","tags","{id}")
@@ -74,24 +85,70 @@ public class TextTagController {
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteTextTag(@PathVariable("id") Long id){
         Optional<TextTag> opt = textTagService.find(id);
-        if (opt.isPresent()){
-            textTagService.delete(opt.get());
-            return ResponseEntity.accepted().build();
+        if (opt.isEmpty()){   
+            return ResponseEntity.notFound().header("Description", "Tag not found").build();
         }
-        else{
-            return ResponseEntity.notFound().build();
+
+        //Delete all relationships with NamedEntityTypes
+        for(NamedEntityType type : namedEntityTypeService.findByTextTag(opt.get())){
+            List<TextTag> newTags = new ArrayList<>();
+            
+            for (TextTag tag : type.getTextTags()) {
+                if(tag.getId() != opt.get().getId())
+                    newTags.add(textTagService.find(tag.getId()).get());
+            }
+
+            type.setTextTags(newTags);
+            namedEntityTypeService.update(type,false);
         }
+        
+        textTagService.delete(opt.get());
+        return ResponseEntity.accepted().build();
     }
 
     @PutMapping("{id}")
     public ResponseEntity<Void> updateTextTag(@PathVariable("id") Long id,@RequestBody PutTextTagRequest rq){
         Optional<TextTag> opt = textTagService.find(id);
-        if (opt.isPresent()){
-            textTagService.update(PutTextTagRequest.dtoToEntityUpdater().apply(opt.get(),rq));
-            return ResponseEntity.accepted().build();
+        if (opt.isEmpty()){
+            return ResponseEntity.notFound().header("Description", "Tag not found").build();
         }
-        else{
-            return ResponseEntity.notFound().build();
+
+        //DELETE relationships in owning side
+        for(NamedEntityType type : namedEntityTypeService.findByTextTag(opt.get())){
+            List<TextTag> newTags = new ArrayList<>();
+            
+            for (TextTag tag : type.getTextTags()) {
+                if(tag.getId() != opt.get().getId())
+                    newTags.add(textTagService.find(tag.getId()).get());
+            }
+
+            type.setTextTags(newTags);
+            namedEntityTypeService.update(type,false);
         }
+
+        //Create updated object
+        TextTag textTag = PutTextTagRequest.dtoToEntityUpdater( 
+            types_ids -> {
+                List<NamedEntityType> types = new ArrayList<>();
+                for(Long _id : types_ids){
+                        Optional<NamedEntityType> _opt = namedEntityTypeService.find(_id);
+                        if(_opt.isPresent()){
+                            types.add(_opt.get());
+                        }
+                }
+                return types;
+            }
+        ).apply(opt.get(),rq);
+
+        //Connect relationships in owning side
+        for(NamedEntityType type : textTag.getNamedEntityTypes()){
+
+            List<TextTag> newTextTags = type.getTextTags();
+            newTextTags.add(textTag);
+            type.setTextTags(newTextTags);
+            namedEntityTypeService.update(type, false);
+        }
+
+        return ResponseEntity.accepted().build();
     }
 }

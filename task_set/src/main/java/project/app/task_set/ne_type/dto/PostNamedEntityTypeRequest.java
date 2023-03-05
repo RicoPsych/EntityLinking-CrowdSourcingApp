@@ -22,14 +22,15 @@ import project.app.task_set.task_set.TaskSet;
 @NoArgsConstructor
 
 public class PostNamedEntityTypeRequest {
-    private Long id;
-    private Long[] taskSets;
+    //private long id;
+    private long[] taskSets;
     /**
      * Static function to map dto to NamedEntityType representation entity
      * @return NamedEntityType
      */
-    public static Function<PostNamedEntityTypeRequest, NamedEntityType> dtoToEntityMapper(Function<Long[],List<TaskSet>> taskSetGetter){
+    public static Function<PostNamedEntityTypeRequest, NamedEntityType> dtoToEntityMapper(Function<long[],List<TaskSet>> taskSetGetter){
         return request -> NamedEntityType.builder()
+
             .taskSets(taskSetGetter.apply(request.getTaskSets()))
             .build();
 

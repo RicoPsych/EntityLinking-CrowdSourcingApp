@@ -1,7 +1,6 @@
 package project.app.named_entity.named_entity.dto;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +11,7 @@ import lombok.Setter;
 import lombok.ToString;
 import project.app.named_entity.named_entity.NamedEntity;
 import project.app.named_entity.named_entity_type.NamedEntityType;
-import project.app.named_entity.text.Text;
+
 
 @ToString
 @Setter

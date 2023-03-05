@@ -42,19 +42,16 @@ public class TextController {
     @GetMapping("{id}")
     public ResponseEntity<GetTextResponse> getText(@PathVariable("id") Long id){
         Optional<Text> opt = textService.find(id);
-        if (opt.isPresent()){
-            return ResponseEntity.ok(GetTextResponse.entityToDtoMapper().apply(opt.get()));
+        if (opt.isEmpty()){        
+            return ResponseEntity.notFound().header("Description", "Text not found").build();
         }
-        else{
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(GetTextResponse.entityToDtoMapper().apply(opt.get()));
     }
 
     @PostMapping
     public ResponseEntity<Void> postText(@RequestBody PostTextRequest rq, UriComponentsBuilder builder){
         Text text = PostTextRequest.dtoToEntityMapper(
             taskSet_ids -> {
-                //if taskSet_ids == null -> taskSets = null;
                 List<TaskSet> taskSets = new ArrayList<>();
                 for(Long _id : taskSet_ids){
                         Optional<TaskSet> _opt = taskSetService.find(_id);
@@ -68,6 +65,16 @@ public class TextController {
         )
         .apply(rq);
         text = textService.add(text);
+
+        // UPDATE OWNING SIDE to persist relationship 
+        for(TaskSet set : text.getTaskSets()){
+            List<Text> newText = set.getTexts();
+            newText.add(text);
+            set.setTexts(newText);
+            taskSetService.update(set,false);
+        }
+
+
         return ResponseEntity
             .created(builder
                 .pathSegment("api","texts","{id}")
@@ -78,25 +85,52 @@ public class TextController {
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteText(@PathVariable("id") Long id){
         Optional<Text> opt = textService.find(id);
-        if (opt.isPresent()){
-            textService.delete(opt.get());
-            return ResponseEntity.accepted().build();
+        if (opt.isEmpty()){
+            return ResponseEntity.notFound().header("Description", "Text not found").build();
         }
-        else{
-            return ResponseEntity.notFound().build();
+
+        //Delete relationships with sets in NEType side
+        for(TaskSet set : taskSetService.findByText(opt.get())){
+            List<Text> newTexts = new ArrayList<>();
+            
+            for (Text text : set.getTexts()) {
+                if(text.getId() != opt.get().getId())
+                    newTexts.add(textService.find(text.getId()).get());
+            }
+
+            set.setTexts(newTexts);
+            taskSetService.update(set,false);
         }
+
+        textService.delete(opt.get());
+        return ResponseEntity.accepted().build();
     }
 
     @PutMapping("{id}")
     public ResponseEntity<Void> updateText(@PathVariable("id") Long id,@RequestBody PutTextRequest rq){
         Optional<Text> opt = textService.find(id);
         if (opt.isEmpty()){
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().header("Description", "Text not found").build();
         }
 
-        textService.update(PutTextRequest.dtoToEntityMapper(            
+
+        //Delete relationships with sets in NEType side
+        for(TaskSet set : taskSetService.findByText(opt.get())){
+            //TODO: REMOVE INaczej????
+            List<Text> newTexts = new ArrayList<>();
+            
+            for (Text text : set.getTexts()) {
+                if(text.getId() != opt.get().getId()){
+                    newTexts.add(textService.find(text.getId()).get());
+                }
+            }
+
+            set.setTexts(newTexts);
+            taskSetService.update(set,false);
+        }
+
+        Text text = PutTextRequest.dtoToEntityMapper(            
             taskSet_ids -> {
-                //if taskSet_ids == null -> taskSets = null;
                 List<TaskSet> taskSets = new ArrayList<>();
                 for(Long _id : taskSet_ids){
                         Optional<TaskSet> _opt = taskSetService.find(_id);
@@ -106,7 +140,15 @@ public class TextController {
                         /**If it doesnt find the tag just skips it TODO:PostText task_set */
                 }
             return taskSets;
-        }).apply(opt.get(),rq));
+        }).apply(opt.get(),rq);
+
+        // UPDATE OWNING SIDE to persist relationship 
+        for(TaskSet set : text.getTaskSets()){
+            List<Text> newText = set.getTexts();
+            newText.add(text);
+            set.setTexts(newText);
+            taskSetService.update(set,false);
+        }
 
         return ResponseEntity.accepted().build();
     }

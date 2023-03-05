@@ -59,25 +59,24 @@ public class TextTagController {
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteTextTag(@PathVariable("id") Long id){
         Optional<TextTag> opt = textTagService.find(id);
-        if (opt.isPresent()){
-            //delete connection to the tag
-            for(Text text : textService.findByTag(opt.get())){                
-                List<TextTag> new_tags = new ArrayList<>();
-                for (TextTag tag : text.getTextTags()) {
-                    if(tag.getId() != opt.get().getId())
-                        new_tags.add(textTagService.find(tag.getId()).get());
-                }
-
-                text.setTextTags(new_tags);
-                textService.update(text);
+        if (opt.isEmpty()){
+            return ResponseEntity.notFound().header("Description", "Text Tag not found").build();
+        }
+        //delete connection to the tags
+        for(Text text : textService.findByTag(opt.get())){                
+            List<TextTag> new_tags = new ArrayList<>();
+            for (TextTag tag : text.getTextTags()) {
+                if(tag.getId() != opt.get().getId())
+                    new_tags.add(textTagService.find(tag.getId()).get());
             }
-            //delete tag
-            textTagService.delete(opt.get());
-            return ResponseEntity.accepted().build();
+
+            text.setTextTags(new_tags);
+            textService.update(text);
         }
-        else{
-            return ResponseEntity.notFound().build();
-        }
+        //delete tag
+        textTagService.delete(opt.get());
+        return ResponseEntity.accepted().build();
+
     }
 
 }

@@ -11,7 +11,7 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class TaskSetService {
-    TaskSetRepository repository;
+    private TaskSetRepository repository;
 
     /**
      * Service for TaskSet representation in NamedEntityType microservice

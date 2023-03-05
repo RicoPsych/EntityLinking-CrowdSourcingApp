@@ -1,7 +1,6 @@
 package project.app.named_entity.named_entity.dto;
 import java.util.function.Function;
 
-import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

@@ -34,4 +34,11 @@ public class NamedEntityTypeService {
         repository.delete(type);
     }
 
+    @Transactional
+    public void update(NamedEntityType newType){
+        repository.findById(newType.getId())
+        .ifPresent(type -> {
+            type.setTaskSets(newType.getTaskSets());
+        });        
+    }
 }

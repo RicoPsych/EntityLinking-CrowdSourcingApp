@@ -25,13 +25,15 @@ import project.app.ne_type.text_tag.TextTagService;
 @RestController
 @RequestMapping("api/netypes")
 public class NamedEntityTypeController {
-    NamedEntityTypeService netService;
-    TaskSetService taskSetService;
-    TextTagService textTagService;
+    private NamedEntityTypeService netService;
+    private TaskSetService taskSetService;
+    private TextTagService textTagService;
 
     @Autowired
-    NamedEntityTypeController(NamedEntityTypeService service){
+    NamedEntityTypeController(NamedEntityTypeService service,TaskSetService taskSetService,TextTagService textTagService){
         this.netService = service;
+        this.taskSetService = taskSetService;
+        this.textTagService = textTagService;
     }
 
     @GetMapping()
@@ -46,7 +48,7 @@ public class NamedEntityTypeController {
             return ResponseEntity.ok(GetNamedEntityTypeResponse.entityToDtoMapper().apply(opt.get()));
         }
         else{
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().header("Description", "Type not found").build();
         }
     }
 
@@ -54,7 +56,6 @@ public class NamedEntityTypeController {
     public ResponseEntity<Void> postType(@RequestBody PostNamedEntityTypeRequest rq, UriComponentsBuilder builder){
         NamedEntityType type = PostNamedEntityTypeRequest.dtoToEntityMapper(
             tags_ids -> {
-                //if text_ids == null -> texts = null;
                 List<TextTag> tags = new ArrayList<>();
                 for(Long _id : tags_ids){
                         Optional<TextTag> _opt = textTagService.find(_id);
@@ -66,15 +67,12 @@ public class NamedEntityTypeController {
                 return tags;
             },
 
-            _type_id -> {
-                //if type_ids == null -> types = null;
-
-                    Optional<NamedEntityType> _opt = netService.find(_type_id);
-                    if(_opt.isPresent()){
-                        return _opt.get();
+            type_id -> {
+                    Optional<NamedEntityType> _opt = netService.find(type_id);
+                    if(_opt.isEmpty()){
+                        return null;
                     }
-                    return null;
-                    /**If it doesnt find the tag just skips it TODO: updateType*/
+                    return _opt.get();
                 }
             ,
             task_sets_ids -> {
@@ -99,27 +97,25 @@ public class NamedEntityTypeController {
             .build();  
     }
 
+    //TODO: usuwanie związków???
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteType(@PathVariable("id") Long id){
         Optional<NamedEntityType> opt = netService.find(id);
-        if (opt.isPresent()){
-            netService.delete(opt.get());
-            return ResponseEntity.accepted().build();
+        if (opt.isEmpty()){
+            return ResponseEntity.notFound().header("Description", "Type not found").build();
         }
-        else{
-            return ResponseEntity.notFound().build();
-        }
+        netService.delete(opt.get());
+        return ResponseEntity.accepted().build();
     }
 
     @PutMapping("{id}")
     public ResponseEntity<Void> updateType(@PathVariable("id") Long id, @RequestBody PutNamedEntityTypeRequest rq){
         Optional<NamedEntityType> opt = netService.find(id);
         if (opt.isEmpty()){
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().header("Description", "Type not found").build();
         }
         netService.update(PutNamedEntityTypeRequest.dtoToEntityUpdater( 
             tags_ids -> {
-                //if text_ids == null -> texts = null;
                 List<TextTag> tags = new ArrayList<>();
                 for(Long _id : tags_ids){
                         Optional<TextTag> _opt = textTagService.find(_id);
@@ -132,30 +128,26 @@ public class NamedEntityTypeController {
             },
 
             _type_id -> {
-                //if type_ids == null -> types = null;
 
                     Optional<NamedEntityType> _opt = netService.find(_type_id);
                     if(_opt.isPresent()){
                         return _opt.get();
                     }
                     return null;
-
-                    /**If it doesnt find the tag just skips it TODO: updateType*/
                 }
             ,
             task_sets_ids -> {
-                //if text_ids == null -> texts = null;
                 List<TaskSet> sets = new ArrayList<>();
                 for(Long _id : task_sets_ids){
                         Optional<TaskSet> _opt = taskSetService.find(_id);
                         if(_opt.isPresent()){
                             sets.add(_opt.get());
                         }
-                        /**If it doesnt find the tag just skips it TODO:postTaskSet */
+                        /**If it doesnt find the tag just skips it TODO:UpdateType */
                 }
                 return sets;
             }
-        ).apply(opt.get(),rq));
+        ).apply(opt.get(),rq),true);
 
         return ResponseEntity.accepted().build();
     }

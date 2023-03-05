@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import project.app.ne_type.ne_type_event.NamedEntityTypeEventRepository;
+import project.app.ne_type.task_set.TaskSet;
+import project.app.ne_type.text_tag.TextTag;
 
 @Service
 public class NamedEntityTypeService {
@@ -16,12 +18,21 @@ public class NamedEntityTypeService {
 
 
     @Autowired
-    public NamedEntityTypeService(NamedEntityTypeRepository repo){
+    public NamedEntityTypeService(NamedEntityTypeRepository repo,NamedEntityTypeEventRepository eventRepository){
         this.repository = repo;
+        this.eventRepository = eventRepository;
     }
 
     public List<NamedEntityType> findAll(){
         return repository.findAll();
+    }
+
+    public List<NamedEntityType> findByTaskSet(TaskSet set){
+        return repository.findByTaskSetsContaining(set);
+    }
+
+    public List<NamedEntityType> findByTextTag(TextTag tag){
+        return repository.findByTextTagsContaining(tag);
     }
 
 
@@ -42,18 +53,18 @@ public class NamedEntityTypeService {
     }
 
     @Transactional
-    public void update(NamedEntityType newType){
+    public void update(NamedEntityType newType, boolean sendEvent){
         repository.findById(newType.getId())
         .ifPresent(type -> {
             type.setDescription(newType.getDescription());
             type.setName(newType.getName());
-            type.setNamedEntityTypeChildren(newType.getNamedEntityTypeChildren());
             type.setNamedEntityTypeParent(newType.getNamedEntityTypeParent());
             type.setTaskSets(newType.getTaskSets());
             type.setTextTags(newType.getTextTags());
             
             //TODO: DODAĆ IF zmiany w związkach to wtedy update! 
-            eventRepository.update(newType);
+            if(sendEvent)
+                eventRepository.update(newType);
         });
 
         

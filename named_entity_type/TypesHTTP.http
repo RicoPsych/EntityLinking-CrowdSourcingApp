@@ -1,0 +1,50 @@
+###
+POST http://localhost:8083/api/netypes
+Content-Type: application/json
+
+{
+    "name":"2",
+    "description":"desc",
+    "namedEntityTypeParent":1,
+    "textTags":[],
+    "taskSets":[]
+}
+###
+POST http://localhost:8083/api/tags
+Content-Type: application/json
+
+{
+    "namedEntityTypes":[]
+}
+###
+
+POST http://localhost:8083/api/task_sets
+Content-Type: application/json
+
+{
+    "namedEntityTypes":[]
+}
+###
+GET http://localhost:8083/api/netypes/1
+###
+GET http://localhost:8083/api/task_sets/1
+###
+POST http://localhost:8083/api/netypes
+Content-Type: application/json
+
+{
+
+}
+
+###
+
+DELETE http://localhost:8083/api/netypes/1
+###
+DELETE http://localhost:8083/api/tags/1
+###
+GET http://localhost:8083/api/tags
+###
+GET http://localhost:8083/api/tags/1
+
+###
+GET http://localhost:8083/api/netypes/1

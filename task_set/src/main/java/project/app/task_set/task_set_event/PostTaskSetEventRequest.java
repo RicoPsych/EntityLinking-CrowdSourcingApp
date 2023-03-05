@@ -20,10 +20,14 @@ import project.app.task_set.task_set.TaskSet;
 @Builder
 public class PostTaskSetEventRequest {
     private long id;
-
+    private long[] namedEntityTypes;
+    private long[] texts;
+    
     public static Function<TaskSet,PostTaskSetEventRequest> entityToDtoMapper(){
         return entity -> PostTaskSetEventRequest.builder()
             .id(entity.getId())
+            .namedEntityTypes(entity.getNamedEntityTypes().stream().mapToLong(type -> type.getId()).toArray())
+            .texts(entity.getTexts().stream().mapToLong(text -> text.getId()).toArray())
             .build();
     }
 }

@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import project.app.task_set.ne_type.NamedEntityType;
 import project.app.task_set.task_set_event.TaskSetEventRepository;
+import project.app.task_set.text.Text;
 
 
 @Service
@@ -34,6 +36,16 @@ public class TaskSetService {
         return repository.findById(id);
     }
 
+    public List<TaskSet> findByNamedEntityType(NamedEntityType type){
+        return repository.findByNamedEntityTypesContaining(type);    
+    }
+
+
+    public List<TaskSet> findByText(Text text){
+        return repository.findByTextsContaining(text);    
+    }
+
+
     @Transactional
     public TaskSet add(TaskSet set){
         //TODO: Ochrone przed duplikatami w Controlerze trzeba dodac
@@ -48,14 +60,15 @@ public class TaskSetService {
     }
 
     @Transactional
-    public void update(TaskSet newSet){
+    public void update(TaskSet newSet, boolean sendEvent){
         repository.findById(newSet.getId())
         .ifPresent(set -> {
-            //set.setTexts(newSet.getTexts());
-            if(!newSet.getTexts().equals(newSet.getTexts())){
-                set.setTexts(newSet.getTexts());
+
+            set.setTexts(newSet.getTexts());
+            set.setNamedEntityTypes(newSet.getNamedEntityTypes());
+            if(sendEvent)
                 eventRepository.update(newSet);
-            }
+   
         });
     }        
 }

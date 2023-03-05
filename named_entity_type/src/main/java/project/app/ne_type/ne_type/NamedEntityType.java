@@ -3,6 +3,7 @@ package project.app.ne_type.ne_type;
 import java.io.Serializable;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -43,23 +44,25 @@ public class NamedEntityType implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    
     @Column(name="named_entity_type_name")
     private String name;
 
     @Column(name="named_entity_type_description")
     private String description;
 
-    //TODO:
 
-    @OneToMany(mappedBy="namedEntityTypeParent")
+
+    @OneToMany(mappedBy="namedEntityTypeParent",cascade = CascadeType.REMOVE)
     private List<NamedEntityType> namedEntityTypeChildren;
 
+    //TODO: cos nie dziala nullowanie parenta przy tworzeniu
     @ManyToOne
-    @JoinColumn(name ="named_entity_type_parent")
+    @JoinColumn(name ="named_entity_type_parent", nullable = true)
     private NamedEntityType namedEntityTypeParent;
 
 
-    ///
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "named_entity_types_tags",

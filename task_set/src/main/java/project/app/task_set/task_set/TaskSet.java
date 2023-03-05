@@ -5,6 +5,8 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -36,16 +38,17 @@ public class TaskSet implements Serializable {
 
     @Id
     @Column(name="task_set_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @ManyToMany
-    @JoinTable(name = "text", 
+    @JoinTable(name = "task_set_text", 
         joinColumns = @JoinColumn(name="task_set_id"),
         inverseJoinColumns = @JoinColumn(name = "text_id"))
     private List<Text> texts;
 
     @ManyToMany
-    @JoinTable(name = "named_entity_types", 
+    @JoinTable(name = "task_set_named_entity_types", 
         joinColumns = @JoinColumn(name="task_set_id"),
         inverseJoinColumns = @JoinColumn(name = "named_entity_type_id"))
     private List<NamedEntityType> namedEntityTypes;

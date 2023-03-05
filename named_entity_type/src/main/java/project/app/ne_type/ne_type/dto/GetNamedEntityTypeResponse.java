@@ -23,7 +23,7 @@ public class GetNamedEntityTypeResponse {
     private String name;
     private String description;
     private Long namedEntityTypeParent;
-    private Long[] namedEntityTypesChild; //????
+    //private Long[] namedEntityTypesChild; //????
 
     public static Function<NamedEntityType,GetNamedEntityTypeResponse> entityToDtoMapper(){
         return type -> GetNamedEntityTypeResponse.builder()

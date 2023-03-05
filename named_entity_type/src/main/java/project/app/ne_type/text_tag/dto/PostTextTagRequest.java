@@ -23,12 +23,11 @@ import project.app.ne_type.text_tag.TextTag;
 @NoArgsConstructor
 
 public class PostTextTagRequest {
-    private long[] types;
+    private long[] namedEntityTypes;
 
     public static Function<PostTextTagRequest, TextTag> dtoToEntityMapper(Function<long[],List<NamedEntityType>> typeGetter){
         return request -> TextTag.builder()
-            .types(typeGetter.apply(request.getTypes()))
-        //TODO: types and texts
+            .namedEntityTypes(typeGetter.apply(request.getNamedEntityTypes()))
             .build();
 
     }

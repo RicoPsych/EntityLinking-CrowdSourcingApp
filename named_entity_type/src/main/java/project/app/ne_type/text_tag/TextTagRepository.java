@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TextTagRepository extends JpaRepository<TextTag,Long>{
-    Optional<TextTag> findByName(String name);
+    //TODO: usunąć chyba Optional<TextTag> findByName(String name);
 }

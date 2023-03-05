@@ -1,6 +1,7 @@
 package project.app.ne_type.text_tag.dto;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import project.app.ne_type.ne_type.NamedEntityType;
 import project.app.ne_type.text_tag.TextTag;
 
 
@@ -20,12 +22,11 @@ import project.app.ne_type.text_tag.TextTag;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PutTextTagRequest {
-    private long[] types;
+    private long[] namedEntityTypes;
 
-    public static BiFunction<TextTag,PutTextTagRequest,TextTag> dtoToEntityUpdater(){
+    public static BiFunction<TextTag,PutTextTagRequest,TextTag> dtoToEntityUpdater(Function<long[],List<NamedEntityType>> typeGetter){
         return (textTag, request) -> {
-            //TODO: types and texts
-            
+            textTag.setNamedEntityTypes(typeGetter.apply(request.getNamedEntityTypes()));
             return textTag;
         };
     }
