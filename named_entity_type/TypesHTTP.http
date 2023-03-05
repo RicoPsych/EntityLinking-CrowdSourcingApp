@@ -3,12 +3,34 @@ POST http://localhost:8083/api/netypes
 Content-Type: application/json
 
 {
-    "name":"2",
+    "name":"3",
     "description":"desc",
     "namedEntityTypeParent":1,
     "textTags":[],
     "taskSets":[]
 }
+
+###
+GET http://localhost:8083/api/netypes/1
+###
+GET http://localhost:8083/api/task_sets/1
+###
+PUT http://localhost:8083/api/netypes/2
+Content-Type: application/json
+
+{
+    "name":"Zmiana",
+    "description":"new",
+    "namedEntityTypeParent":1,
+    "textTags":[],
+    "taskSets":[2]
+}
+
+###
+
+DELETE http://localhost:8083/api/netypes/1
+###
+GET http://localhost:8083/api/netypes/1
 ###
 POST http://localhost:8083/api/tags
 Content-Type: application/json
@@ -24,27 +46,3 @@ Content-Type: application/json
 {
     "namedEntityTypes":[]
 }
-###
-GET http://localhost:8083/api/netypes/1
-###
-GET http://localhost:8083/api/task_sets/1
-###
-POST http://localhost:8083/api/netypes
-Content-Type: application/json
-
-{
-
-}
-
-###
-
-DELETE http://localhost:8083/api/netypes/1
-###
-DELETE http://localhost:8083/api/tags/1
-###
-GET http://localhost:8083/api/tags
-###
-GET http://localhost:8083/api/tags/1
-
-###
-GET http://localhost:8083/api/netypes/1

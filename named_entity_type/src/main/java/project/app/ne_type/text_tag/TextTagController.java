@@ -89,6 +89,7 @@ public class TextTagController {
             return ResponseEntity.notFound().header("Description", "Tag not found").build();
         }
 
+        //TODO:OPTYMALIZACJA
         //Delete all relationships with NamedEntityTypes
         for(NamedEntityType type : namedEntityTypeService.findByTextTag(opt.get())){
             List<TextTag> newTags = new ArrayList<>();
@@ -113,6 +114,7 @@ public class TextTagController {
             return ResponseEntity.notFound().header("Description", "Tag not found").build();
         }
 
+        //TODO:OPTYMALIZACJA
         //DELETE relationships in owning side
         for(NamedEntityType type : namedEntityTypeService.findByTextTag(opt.get())){
             List<TextTag> newTags = new ArrayList<>();

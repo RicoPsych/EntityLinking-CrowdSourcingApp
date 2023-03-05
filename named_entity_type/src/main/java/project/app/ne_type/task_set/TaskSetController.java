@@ -170,19 +170,19 @@ public class TaskSetController {
         //TODO: CHYBA NIE POTRZEBNE, POWINNO SAMO SIE ZROBIĆ PO UPDATCIE OWNING SIDE'A        
         
         TaskSet taskSet = PutTaskSetRequest.dtoToEntityUpdater( 
-        type_ids -> {
-            //if type_ids == null -> types = null;
-            List<NamedEntityType> types = new ArrayList<>();
-            for(Long _id : type_ids){
-                    Optional<NamedEntityType> _opt = namedEntityTypeService.find(_id);
-                    if(_opt.isPresent()){
-                        types.add(_opt.get());
-                    }
-                    /**If it doesnt find the tag just skips it TODO: updateTaskSet*/
+            type_ids -> {
+                //if type_ids == null -> types = null;
+                List<NamedEntityType> types = new ArrayList<>();
+                for(Long _id : type_ids){
+                        Optional<NamedEntityType> _opt = namedEntityTypeService.find(_id);
+                        if(_opt.isPresent()){
+                            types.add(_opt.get());
+                        }
+                        /**If it doesnt find the tag just skips it TODO: updateTaskSet*/
+                }
+                return types;
             }
-            return types;
-        })
-        .apply(opt.get(),rq);
+        ).apply(opt.get(),rq);
         
         
         //Connect relationships in owning side

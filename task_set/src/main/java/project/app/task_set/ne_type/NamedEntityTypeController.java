@@ -86,7 +86,7 @@ public class NamedEntityTypeController {
         if (opt.isEmpty()){
             return ResponseEntity.notFound().header("Description", "Type not found").build();
         }
-
+        //TODO:OPTYMALIZACJA
         //Delete relationships with sets in OWNING SIDE
         for(TaskSet set : taskSetService.findByNamedEntityType(opt.get())){
             List<NamedEntityType> newTypes = new ArrayList<>();
@@ -112,6 +112,7 @@ public class NamedEntityTypeController {
             return ResponseEntity.notFound().header("Description", "Type not found").build();
         }
 
+        //TODO:OPTYMALIZACJA
         //Delete relationships with sets in OWNING SIDE
         for(TaskSet set : taskSetService.findByNamedEntityType(opt.get())){
             List<NamedEntityType> newTypes = new ArrayList<>();

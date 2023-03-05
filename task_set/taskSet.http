@@ -3,11 +3,11 @@ Content-Type: application/json
 
 {
     "texts":[],
-    "namedEntityTypes":[1]
+    "namedEntityTypes":[]
 }
 
 ###
-DELETE  http://localhost:8085/api/task_sets/4
+DELETE  http://localhost:8085/api/task_sets/2
 
 
 
@@ -28,10 +28,10 @@ Content-Type: application/json
 }
 ###
 
-PUT http://localhost:8085/api/task_sets/1
+PUT http://localhost:8085/api/task_sets/2
 Content-Type: application/json
 
 {
     "texts":[],
-    "namedEntityTypes":[2]
+    "namedEntityTypes":[1]
 }
