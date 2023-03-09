@@ -65,7 +65,7 @@ public class NamedEntityType implements Serializable {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        name = "named_entity_types_tags",
+        name = "named_entity_types_text_tags",
         joinColumns = @JoinColumn(name= "named_entity_type_id"),
         inverseJoinColumns = @JoinColumn(name= "text_tag_id"))
     private List<TextTag> textTags;

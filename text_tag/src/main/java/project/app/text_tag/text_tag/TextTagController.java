@@ -1,5 +1,7 @@
 package project.app.text_tag.text_tag;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import project.app.text_tag.ne_type.NamedEntityType;
 import project.app.text_tag.ne_type.NamedEntityTypeService;
-import project.app.text_tag.text.TextController;
+import project.app.text_tag.text.Text;
 import project.app.text_tag.text.TextService;
 import project.app.text_tag.text_tag.dto.*;
 
@@ -28,9 +30,10 @@ public class TextTagController {
     private NamedEntityTypeService namedEntityTypeService;
 
     @Autowired
-    public TextTagController(TextTagService service){
-        textTagService = service;
-        
+    public TextTagController(TextTagService service,TextService textService,NamedEntityTypeService namedEntityTypeService){
+        this.textTagService = service;
+        this.textService = textService;
+        this.namedEntityTypeService = namedEntityTypeService;
     }
 
     @GetMapping
@@ -41,18 +44,40 @@ public class TextTagController {
     @GetMapping("{id}")
     public ResponseEntity<GetTextTagResponse> getTextTag(@PathVariable("id") Long id){
         Optional<TextTag> opt = textTagService.find(id);
-        if (opt.isPresent()){
-            return ResponseEntity.ok(GetTextTagResponse.entityToDtoMapper().apply(opt.get()));
+        if (opt.isEmpty()){
+            return ResponseEntity.notFound().header("Description", "Tag not found").build();
+
         }
-        else{
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(GetTextTagResponse.entityToDtoMapper().apply(opt.get()));
+
     }
 
     @PostMapping
     public ResponseEntity<Void> postTextTag(@RequestBody PostTextTagRequest rq, UriComponentsBuilder builder){
-        TextTag textTag = PostTextTagRequest.dtoToEntityMapper() //restrictions?
-            .apply(rq);
+        TextTag textTag = PostTextTagRequest.dtoToEntityMapper(
+            types_ids -> {
+                List<NamedEntityType> types = new ArrayList<>();
+                for(Long _id : types_ids){
+                        Optional<NamedEntityType> _opt = namedEntityTypeService.find(_id);
+                        if(_opt.isPresent()){
+                            types.add(_opt.get());
+                        }
+                        /**If it doesnt find the tag just skips it TODO:UpdateType */
+                }
+                return types;
+            },
+            texts_ids -> {
+                List<Text> texts = new ArrayList<>();
+                for(Long _id : texts_ids){
+                        Optional<Text> _opt = textService.find(_id);
+                        if(_opt.isPresent()){
+                            texts.add(_opt.get());
+                        }
+                        /**If it doesnt find the tag just skips it TODO:UpdateType */
+                }
+                return texts;
+            }
+        ).apply(rq);
         textTag = textTagService.add(textTag);
         return ResponseEntity
             .created(builder
@@ -64,24 +89,43 @@ public class TextTagController {
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteTextTag(@PathVariable("id") Long id){
         Optional<TextTag> opt = textTagService.find(id);
-        if (opt.isPresent()){
-            textTagService.delete(opt.get());
-            return ResponseEntity.accepted().build();
+        if (opt.isEmpty()){
+            return ResponseEntity.notFound().header("Description", "Tag not found").build();
         }
-        else{
-            return ResponseEntity.notFound().build();
-        }
+        textTagService.delete(opt.get());
+        return ResponseEntity.accepted().build();
     }
 
     @PutMapping("{id}")
     public ResponseEntity<Void> updateTextTag(@PathVariable("id") Long id,@RequestBody PutTextTagRequest rq){
         Optional<TextTag> opt = textTagService.find(id);
-        if (opt.isPresent()){
-            textTagService.update(PutTextTagRequest.dtoToEntityUpdater().apply(opt.get(),rq));
-            return ResponseEntity.accepted().build();
+        if (opt.isEmpty()){
+            return ResponseEntity.notFound().header("Description", "Tag not found").build();
         }
-        else{
-            return ResponseEntity.notFound().build();
-        }
+        textTagService.update(PutTextTagRequest.dtoToEntityUpdater(
+            types_ids -> {
+                List<NamedEntityType> types = new ArrayList<>();
+                for(Long _id : types_ids){
+                        Optional<NamedEntityType> _opt = namedEntityTypeService.find(_id);
+                        if(_opt.isPresent()){
+                            types.add(_opt.get());
+                        }
+                        /**If it doesnt find the tag just skips it TODO:UpdateType */
+                }
+                return types;
+            },
+            texts_ids -> {
+                List<Text> texts = new ArrayList<>();
+                for(Long _id : texts_ids){
+                        Optional<Text> _opt = textService.find(_id);
+                        if(_opt.isPresent()){
+                            texts.add(_opt.get());
+                        }
+                        /**If it doesnt find the tag just skips it TODO:UpdateType */
+                }
+                return texts;
+            }
+        ).apply(opt.get(),rq),true);
+        return ResponseEntity.accepted().build();
     }
 }

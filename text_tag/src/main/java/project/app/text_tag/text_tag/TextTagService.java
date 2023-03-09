@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import project.app.text_tag.ne_type.NamedEntityType;
+import project.app.text_tag.text.Text;
 import project.app.text_tag.text_tag_event.TextTagEventRepository;
 
 @Service
@@ -22,6 +24,24 @@ public class TextTagService {
 
     public List<TextTag> findAll(){
         return repository.findAll();    
+    }
+
+    /**
+     * Find all TextTags that are connected with provided text
+     * @param text Text
+     * @return List of Tags
+     */
+    public List<TextTag> findByText(Text text){
+        return repository.findByTextsContaining(text);    
+    }
+
+    /**
+     * Find all TextTags that are connected with provided type
+     * @param type NamedEntityType
+     * @return List of Tags
+     */
+    public List<TextTag> findByNamedEntityType(NamedEntityType type){
+        return repository.findByNamedEntityTypesContaining(type);    
     }
     
     public Optional<TextTag> findByName(String name){
@@ -46,17 +66,18 @@ public class TextTagService {
     }
 
     @Transactional
-    public void update(TextTag new_tag){
+    public void update(TextTag new_tag, boolean sendEvent){
         repository.findById(new_tag.getId())
         .ifPresent(tag -> {
             tag.setName(new_tag.getName());
             tag.setDescription(new_tag.getDescription());
-            //TODO: if new_tag.getTexts.equals(tag.getTexts()) chyba git?
-            //Update wysyłany jeśli zmieniono texty w tagu
-            if(!new_tag.getTexts().equals(new_tag.getTexts())){
-                tag.setTexts(new_tag.getTexts());
+            //TODO: Update wysyłany jeśli zmieniono texty w tagu
+            //if(!new_tag.getTexts().equals(new_tag.getTexts())){
+            tag.setTexts(new_tag.getTexts());
+            tag.setNamedEntityTypes(new_tag.getNamedEntityTypes());
+            if(sendEvent)
                 eventRepository.update(new_tag);
-            }
+            //}
         });
     }        
 }

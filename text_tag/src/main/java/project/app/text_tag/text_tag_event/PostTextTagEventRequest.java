@@ -20,10 +20,14 @@ import project.app.text_tag.text_tag.TextTag;
 
 public class PostTextTagEventRequest {
     private long id;
+    private long[] namedEntityTypes;
+    private long[] texts;
 
     public static Function<TextTag,PostTextTagEventRequest> entityToDtoMapper(){
         return entity -> PostTextTagEventRequest.builder()
             .id(entity.getId())
+            .texts(entity.getTexts().stream().mapToLong(text->text.getId()).toArray())
+            .namedEntityTypes(entity.getNamedEntityTypes().stream().mapToLong(type->type.getId()).toArray())
             .build();
     }
 }

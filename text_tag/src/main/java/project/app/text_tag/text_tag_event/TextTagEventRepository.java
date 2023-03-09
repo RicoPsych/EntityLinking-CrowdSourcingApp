@@ -37,11 +37,9 @@ public class TextTagEventRepository {
         }
     }
 
-        //TODO:POST dla związków też (lista) dokończyć!
     public void save(TextTag tag){
         for(RestTemplate template : restTemplates){
             template.postForLocation("/api/tags", PostTextTagEventRequest.entityToDtoMapper().apply(tag));
-        //    template.postForLocation("/tags", PostTextTagEventRequest.entityToDtoMapper().apply(tag));
         }
     }
 }

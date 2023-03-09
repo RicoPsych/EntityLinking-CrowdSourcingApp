@@ -61,7 +61,8 @@ public class NamedEntityTypeController {
                         /**If it doesnt find the tag just skips it TODO:postNamedEntityType task_set */
                 }
                 return taskSets;
-            }).apply(rq); 
+            }
+        ).apply(rq); 
 
         type = netService.add(type);
 
@@ -126,6 +127,7 @@ public class NamedEntityTypeController {
             taskSetService.update(set,false);
         }
 
+        //create entity from request
         //TODO: OPTYMALNIEJ MOZNA ZROBIC
         NamedEntityType type = PutNamedEntityTypeRequest.dtoToEntityUpdater( 
             task_sets_ids -> {

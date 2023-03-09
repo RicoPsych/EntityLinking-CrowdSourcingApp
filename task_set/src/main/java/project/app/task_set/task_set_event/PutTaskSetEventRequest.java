@@ -23,10 +23,10 @@ public class PutTaskSetEventRequest {
     private long[] namedEntityTypes;
 
     public static Function<TaskSet,PutTaskSetEventRequest> entityToDtoMapper(){
-        return (request) -> {
+        return (entity) -> {
             return PutTaskSetEventRequest.builder()
-            .texts(request.getTexts().stream().mapToLong(text-> text.getId()).toArray())
-            .namedEntityTypes(request.getNamedEntityTypes().stream().mapToLong(type-> type.getId()).toArray())
+            .texts(entity.getTexts().stream().mapToLong(text-> text.getId()).toArray())
+            .namedEntityTypes(entity.getNamedEntityTypes().stream().mapToLong(type-> type.getId()).toArray())
             .build();
         };
     }

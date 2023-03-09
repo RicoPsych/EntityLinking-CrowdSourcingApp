@@ -35,10 +35,8 @@ public class Text implements Serializable{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    //TODO: name??
-
 
     @ManyToMany (mappedBy = "texts")
-    @ToString.Exclude
+//    @ToString.Exclude
     private List<TextTag> textTags; //set? efektywniejsze?
 }

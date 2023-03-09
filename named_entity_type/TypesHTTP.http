@@ -3,7 +3,7 @@ POST http://localhost:8083/api/netypes
 Content-Type: application/json
 
 {
-    "name":"3",
+    "name":"1",
     "description":"desc",
     "namedEntityTypeParent":1,
     "textTags":[],

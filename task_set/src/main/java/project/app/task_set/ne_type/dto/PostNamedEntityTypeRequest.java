@@ -28,9 +28,10 @@ public class PostNamedEntityTypeRequest {
      * Static function to map dto to NamedEntityType representation entity
      * @return NamedEntityType
      */
-    public static Function<PostNamedEntityTypeRequest, NamedEntityType> dtoToEntityMapper(Function<long[],List<TaskSet>> taskSetGetter){
+    public static Function<PostNamedEntityTypeRequest, NamedEntityType> dtoToEntityMapper(
+        Function<long[],List<TaskSet>> taskSetGetter
+    ){
         return request -> NamedEntityType.builder()
-
             .taskSets(taskSetGetter.apply(request.getTaskSets()))
             .build();
 

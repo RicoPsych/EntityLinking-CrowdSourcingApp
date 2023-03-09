@@ -24,10 +24,10 @@ public class PutNamedEntityTypeEventRequest {
     private long[] taskSets;
 
     public static Function<NamedEntityType,PutNamedEntityTypeEventRequest> entityToDtoMapper(){
-        return (request) -> {
+        return (entity) -> {
             return PutNamedEntityTypeEventRequest.builder()
-            .textTags(request.getTextTags().stream().mapToLong(tag-> tag.getId()).toArray())
-            .taskSets(request.getTaskSets().stream().mapToLong(tag-> tag.getId()).toArray())
+            .textTags(entity.getTextTags().stream().mapToLong(tag-> tag.getId()).toArray())
+            .taskSets(entity.getTaskSets().stream().mapToLong(tag-> tag.getId()).toArray())
             .build();
         };
     }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -46,16 +47,16 @@ public class TextTag implements Serializable {
     @Column(name="text_tag_description")
     private String description;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        name = "types_in_tags",
+        name = "named_entity_types_text_tags",
         joinColumns = @JoinColumn(name= "text_tag_id"),
         inverseJoinColumns = @JoinColumn(name= "named_entity_type_id"))
     private List<NamedEntityType> namedEntityTypes;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        name = "texts_tags",
+        name = "texts_text_tags",
         joinColumns = @JoinColumn(name= "text_tag_id"),
         inverseJoinColumns = @JoinColumn(name= "text_id"))
     private List<Text> texts;

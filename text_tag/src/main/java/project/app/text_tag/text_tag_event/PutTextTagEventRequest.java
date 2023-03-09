@@ -23,12 +23,15 @@ import project.app.text_tag.text_tag.TextTag;
 
 public class PutTextTagEventRequest {
     private long[] texts;
-    
+    private long[] namedEntityTypes;
+
     public static Function<TextTag,PutTextTagEventRequest> entityToDtoMapper(){
-        return (request) -> {
+        return (entity) -> {
             return PutTextTagEventRequest.builder()
-            .texts(request.getTexts().stream().mapToLong(text-> text.getId()).toArray()).build();
-            //TODO: types and texts
+            .texts(entity.getTexts().stream().mapToLong(text->text.getId()).toArray())
+            .namedEntityTypes(entity.getNamedEntityTypes().stream().mapToLong(type->type.getId()).toArray())
+            .build();
+            
         };
     }
 }

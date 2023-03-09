@@ -28,23 +28,23 @@ public class GetTextTagsResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    static private class Tags{
+    static private class _TextTag{
         private long id;
         private String name;
     }
 
     @Singular
-    private List<Tags> tags;
+    private List<_TextTag> tags;
 
     public static Function<List<TextTag>,GetTextTagsResponse> entityToDtoMapper(){
         return tags ->{
             GetTextTagsResponseBuilder response = GetTextTagsResponse.builder();
             tags.stream()
-                .map(tag -> Tags.builder()
+                .map(tag -> _TextTag.builder()
                     .name(tag.getName())
                     .id(tag.getId())
                     .build())
-                .forEach(response::tag); ///TODO TAGI
+                .forEach(response::tag);
             return response.build();
         };
     }

@@ -97,7 +97,6 @@ public class NamedEntityTypeController {
             .build();  
     }
 
-    //TODO: usuwanie związków???
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteType(@PathVariable("id") Long id){
         Optional<NamedEntityType> opt = netService.find(id);

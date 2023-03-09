@@ -43,13 +43,13 @@ public class TaskSet implements Serializable {
     private long id;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "task_set_text", 
+    @JoinTable(name = "task_sets_texts", 
         joinColumns = @JoinColumn(name="task_set_id"),
         inverseJoinColumns = @JoinColumn(name = "text_id"))
     private List<Text> texts;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "task_set_named_entity_types", 
+    @JoinTable(name = "task_sets_named_entity_types", 
         joinColumns = @JoinColumn(name="task_set_id"),
         inverseJoinColumns = @JoinColumn(name = "named_entity_type_id"))
     private List<NamedEntityType> namedEntityTypes;

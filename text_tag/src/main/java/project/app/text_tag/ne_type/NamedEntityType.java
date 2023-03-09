@@ -39,7 +39,7 @@ public class NamedEntityType implements Serializable {
     private long id;
 
     @ManyToMany(mappedBy = "namedEntityTypes")
-    @ToString.Exclude
+    //@ToString.Exclude
     private List<TextTag> textTags;
 
 }

@@ -3,27 +3,25 @@ POST http://localhost:8082/api/tags
 Content-Type: application/json
 
 {
-    "name":"TAG3",
-    "description":"desc1"
+    "name":"TAG1",
+    "description":"desc1",
+    "namedEntityTypes":[],
+    "texts":[]
 }
 ###
-POST http://localhost:8082/api/texts
+
+GET http://localhost:8082/api/tags/1
+###
+
+PUT http://localhost:8082/api/tags/1
 Content-Type: application/json
 
 {
-
+    "name":"TAG2",
+    "description":"DESCRIPTION2",
+    "namedEntityTypes":[1],
+    "texts":[]
 }
-
-###
-GET http://localhost:8082/api/texts/1
-###
-POST http://localhost:8082/api/netypes
-Content-Type: application/json
-
-{
-
-}
-
 ###
 
 DELETE http://localhost:8082/api/tags/1
