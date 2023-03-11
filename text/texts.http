@@ -5,28 +5,24 @@ Content-Type: application/json
 {
     "name": "text1",
     "content": "content",
-    "tag_ids":[1,2,3,4]
+    "textTags":[1],
+    "taskSets":[1]
 }
 ###
-
-POST http://localhost:8081/api/tags
+PUT http://localhost:8081/api/texts/1
 Content-Type: application/json
 
 {
-
+    "name": "Big",
+    "content": "Chungus",
+    "textTags":[1],
+    "taskSets":[1]
 }
 
-###
-POST http://localhost:8081/api/texts/1/entities
-Content-Type: application/json
-
-{
-
-}
 ###
 GET http://localhost:8081/api/texts
 ###
-GET http://localhost:8081/api/texts/2
+GET http://localhost:8081/api/texts/1
 ###
 GET http://localhost:8081/api/tags/1
 
@@ -38,20 +34,5 @@ GET http://localhost:8081/api/texts/1/entities/1
 ###
 
 DELETE http://localhost:8081/api/texts/1
-###
-
-DELETE http://localhost:8081/api/tags/1
-###
-DELETE http://localhost:8081/api/texts/1/entities/1
-
-###
-PUT http://localhost:8081/api/texts/1
-Content-Type: application/json
-
-{
-    "name": "Big",
-    "content": "Chungus",
-    "tag_ids":[2]
-}
 
 ###

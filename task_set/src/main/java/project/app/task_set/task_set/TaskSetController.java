@@ -88,20 +88,20 @@ public class TaskSetController {
                     /**If it doesnt find the tag just skips it TODO:postTaskSet */
             }
             return texts;
-        },
-        type_ids -> {
-            //if type_ids == null -> types = null;
-            List<NamedEntityType> types = new ArrayList<>();
-            for(Long _id : type_ids){
-                    Optional<NamedEntityType> _opt = namedEntityTypeService.find(_id);
-                    if(_opt.isPresent()){
-                        types.add(_opt.get());
-                    }
-                    /**If it doesnt find the tag just skips it TODO:postTaskSet */
+            },
+            type_ids -> {
+                //if type_ids == null -> types = null;
+                List<NamedEntityType> types = new ArrayList<>();
+                for(Long _id : type_ids){
+                        Optional<NamedEntityType> _opt = namedEntityTypeService.find(_id);
+                        if(_opt.isPresent()){
+                            types.add(_opt.get());
+                        }
+                        /**If it doesnt find the tag just skips it TODO:postTaskSet */
+                }
+                return types;
             }
-            return types;
-        })
-        .apply(rq);
+        ).apply(rq);
         task = taskSetService.add(task);
 
         return ResponseEntity

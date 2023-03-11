@@ -32,7 +32,10 @@ public class PutTaskSetRequest {
      * @param typeGetter function for getting NamedEntitiesType entities list from ids list
      * @return TaskSet 
      */
-    public static BiFunction<TaskSet,PutTaskSetRequest,TaskSet> dtoToEntityUpdater(Function<Long[],List<Text>> textGetter,Function<Long[],List<NamedEntityType>> typeGetter){
+    public static BiFunction<TaskSet,PutTaskSetRequest,TaskSet> dtoToEntityUpdater(
+        Function<Long[],List<Text>> textGetter,
+        Function<Long[],List<NamedEntityType>> typeGetter
+    ){
         return (taskSet, request) -> {
             
             taskSet.setTexts(textGetter.apply(request.getTexts()));

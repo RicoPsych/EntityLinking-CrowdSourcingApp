@@ -24,16 +24,16 @@ public class GetTextResponse {
     private Long id;
     private String name;
     private String content;
-    private Long[] tags;
-    //private Long[] namedEntities;
+    private long[] textTags;
+    private long[] taskSets;
 
     public static Function<Text,GetTextResponse> entityToDtoMapper(){
         return text -> GetTextResponse.builder()
             .id(text.getId())
             .name(text.getName())
             .content(text.getContent())
-            .tags(text.getTags().stream().map(tag -> tag.getId()).toArray(Long[]::new))
-            //.namedEntities(text.getEntities().stream().map(entity -> entity.getId()).toArray(Long[]::new))
+            .textTags(text.getTextTags().stream().mapToLong(tag -> tag.getId()).toArray())
+            .taskSets(text.getTaskSets().stream().mapToLong(set->set.getId()).toArray())
             .build();
     }
 }

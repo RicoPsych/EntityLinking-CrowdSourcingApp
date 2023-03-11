@@ -4,6 +4,8 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
@@ -29,6 +31,7 @@ import project.app.task_set.task_set.TaskSet;
 public class Text implements Serializable{
     @Id
     @Column(name="text_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
     @ManyToMany (mappedBy = "texts")

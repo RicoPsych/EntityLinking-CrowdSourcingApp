@@ -22,8 +22,7 @@ import project.app.text.text.Text;
 @NoArgsConstructor
 
 public class PostTaskSetRequest {
-    private Long[] texts;
-    private Long[] namedEntityTypes;    
+    private long[] texts; 
 
     /**
      * <p> POST </p>
@@ -32,8 +31,9 @@ public class PostTaskSetRequest {
      * @param typeGetter function for getting NamedEntitiesType entities list from ids list
      * @return TaskSet entity 
     */
-    public static Function<PostTaskSetRequest,TaskSet> dtoToEntityMapper(Function<Long[],List<Text>> textGetter){
-        
+    public static Function<PostTaskSetRequest,TaskSet> dtoToEntityMapper(
+        Function<long[],List<Text>> textGetter
+    ){
         return request -> TaskSet.builder()
             .texts(textGetter.apply(request.getTexts()))
             .build();

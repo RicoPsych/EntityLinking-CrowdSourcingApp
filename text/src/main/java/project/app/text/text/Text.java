@@ -46,13 +46,10 @@ public class Text implements Serializable{
 
     @Column(name="content")
     private String content;
-    
-    // @OneToMany(mappedBy = "text") //, fetch = FetchType.EAGER
-    // private List<NamedEntity> entities;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        name = "texts_tags",
+        name = "texts_text_tags",
         joinColumns = @JoinColumn(name= "text_id"),
         inverseJoinColumns = @JoinColumn(name= "text_tag_id"))
     private List<TextTag> textTags;

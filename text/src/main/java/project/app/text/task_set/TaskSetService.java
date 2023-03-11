@@ -33,7 +33,6 @@ public class TaskSetService {
 
     @Transactional
     public TaskSet add(TaskSet set){
-        //TODO: Ochrone przed duplikatami w Controlerze trzeba dodac
         return repository.save(set);
     }
 
@@ -46,10 +45,8 @@ public class TaskSetService {
     public void update(TaskSet newSet){
         repository.findById(newSet.getId())
         .ifPresent(set -> {
-            //set.setTexts(newSet.getTexts());
-            if(!newSet.getTexts().equals(newSet.getTexts())){
-                set.setTexts(newSet.getTexts());
-            }
+            //TODO: if?
+            set.setTexts(newSet.getTexts());
         });
     }        
 }

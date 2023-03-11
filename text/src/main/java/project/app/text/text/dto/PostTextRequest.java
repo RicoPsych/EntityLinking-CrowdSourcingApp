@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import project.app.text.task_set.TaskSet;
 import project.app.text.text.Text;
 import project.app.text.text_tag.TextTag;
 
@@ -24,16 +25,19 @@ import project.app.text.text_tag.TextTag;
 public class PostTextRequest {
     private String name;
     private String content;
-    private Long[] tag_ids;
-    private Long[] task_ids;
+    private Long[] textTags;
+    private Long[] taskSets;
 
-    public static Function<PostTextRequest, Text> dtoToEntityMapper(Function<Long[],List<TextTag>> tagGetter){
+    public static Function<PostTextRequest, Text> dtoToEntityMapper(
+        Function<Long[],List<TextTag>> tagGetter,
+        Function<Long[],List<TaskSet>> taskSetGetter
+    ){
 
         return request -> Text.builder()
             .name(request.getName())
             .content(request.getContent())
-            .tags(tagGetter.apply(request.getTag_ids()))
-            //TODO: .tasks(taskGetter.apply(request.getTask_ids()))
+            .textTags(tagGetter.apply(request.getTextTags()))
+            .taskSets(taskSetGetter.apply(request.getTaskSets()))
             .build();
     }
 }

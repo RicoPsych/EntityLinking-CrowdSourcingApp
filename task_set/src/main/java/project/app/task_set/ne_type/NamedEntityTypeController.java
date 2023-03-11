@@ -127,7 +127,7 @@ public class NamedEntityTypeController {
             taskSetService.update(set,false);
         }
 
-        //create entity from request
+        //update entity from request
         //TODO: OPTYMALNIEJ MOZNA ZROBIC
         NamedEntityType type = PutNamedEntityTypeRequest.dtoToEntityUpdater( 
             task_sets_ids -> {

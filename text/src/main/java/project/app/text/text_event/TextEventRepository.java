@@ -35,4 +35,10 @@ public class TextEventRepository {
             template.postForLocation("/api/texts", PostTextEventRequest.entityToDtoMapper().apply(text));
         }
     }
+
+    public void update(Text text){
+        for(RestTemplate template : restTemplates){
+            template.put("/api/texts/{text}", PutTextEventRequest.entityToDtoMapper().apply(text),text.getId());
+        }
+    }
 }

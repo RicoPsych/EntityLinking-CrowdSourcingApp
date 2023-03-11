@@ -33,8 +33,10 @@ public class PostTaskSetRequest {
      * @param typeGetter function for getting NamedEntitiesType entities list from ids list
      * @return TaskSet entity 
     */
-    public static Function<PostTaskSetRequest,TaskSet> dtoToEntityMapper(Function<Long[],List<Text>> textGetter,Function<Long[],List<NamedEntityType>> typeGetter){
-        
+    public static Function<PostTaskSetRequest,TaskSet> dtoToEntityMapper(
+        Function<Long[],List<Text>> textGetter,
+        Function<Long[],List<NamedEntityType>> typeGetter
+    ){
         return request -> TaskSet.builder()
             .texts(textGetter.apply(request.getTexts()))
             .namedEntityTypes(typeGetter.apply(request.getNamedEntityTypes()))

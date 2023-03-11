@@ -1,6 +1,6 @@
 package project.app.text.text_tag.dto;
-
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import lombok.AllArgsConstructor;
@@ -22,15 +22,16 @@ import project.app.text.text_tag.TextTag;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class PostTextTagRequest {
+public class PutTextTagRequest {
     private long[] texts;
 
-    public static Function<PostTextTagRequest, TextTag> dtoToEntityMapper(
+    public static BiFunction<TextTag, PutTextTagRequest, TextTag> dtoToEntityUpdater(
         Function<long[],List<Text>> textGetter
     ){
-        return request -> TextTag.builder()
-            .texts(textGetter.apply(request.getTexts()))
-            .build();
+        return (textTag, request) -> {
+            textTag.setTexts(textGetter.apply(request.getTexts()));
+            return textTag;
+        };
 
     }
 }

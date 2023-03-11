@@ -38,6 +38,6 @@ public class TextTag implements Serializable{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @ManyToMany(mappedBy = "tags")
+    @ManyToMany(mappedBy = "textTags")
     private List<Text> texts;
 }

@@ -72,9 +72,8 @@ public class TaskSetController {
      */
     @PostMapping
     public ResponseEntity<Void> postTaskSet(@RequestBody PostTaskSetRequest rq, UriComponentsBuilder builder){
-        TaskSet task = PostTaskSetRequest.dtoToEntityMapper( 
+        TaskSet taskSet = PostTaskSetRequest.dtoToEntityMapper( 
             text_ids -> {
-            //if text_ids == null -> texts = null;
             List<Text> texts = new ArrayList<>();
             for(Long _id : text_ids){
                     Optional<Text> _opt = textService.find(_id);
@@ -86,12 +85,20 @@ public class TaskSetController {
             return texts;
         })
         .apply(rq);
-        task = taskSetService.add(task);
+        taskSet = taskSetService.add(taskSet);
+
+        //UPDATE OWNING SIDE to persist relationship
+        for(Text text : taskSet.getTexts()){
+            List<TaskSet> newTaskSets = text.getTaskSets();
+            newTaskSets.add(taskSet);
+            text.setTaskSets(newTaskSets);
+            textService.update(text, false);
+        }
 
         return ResponseEntity
             .created(builder
                 .pathSegment("api","task_sets","{id}")
-                .buildAndExpand(task.getId()).toUri())
+                .buildAndExpand(taskSet.getId()).toUri())
             .build();  
     }
 
@@ -104,17 +111,36 @@ public class TaskSetController {
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteTaskSet(@PathVariable("id") Long id){
         Optional<TaskSet> opt = taskSetService.find(id);
-        if (opt.isPresent()){
-            taskSetService.delete(opt.get());
-            return ResponseEntity.accepted().build();
+        if (opt.isEmpty()){
+            return ResponseEntity.notFound().header("Description", "TaskSet not found").build();
         }
-        else{
-            return ResponseEntity.notFound().build();
+
+        //TODO:OPTYMALIZACJA
+        //Delete relationships with sets in OWNING SIDE
+        for(Text text : textService.findByTaskSet(opt.get())){
+            List<TaskSet> newTaskSets = new ArrayList<>();
+            
+            //DELETE THIS TASK SET FROM RELATIONSHIP
+            for (TaskSet set : text.getTaskSets()) {
+                if(set.getId() != opt.get().getId())
+                    newTaskSets.add(taskSetService.find(set.getId()).get());
+            }
+
+            //UPDATE TEXT WITH NEW TASKSETS
+            text.setTaskSets(newTaskSets);
+            //SEND UPDATE TO TEXTSERVICE
+            textService.update(text,false);
         }
+
+
+        taskSetService.delete(opt.get());
+        return ResponseEntity.accepted().build();
     }
 
     /**
      * Updates Task Set with new parameters from recived request
+     * Deletes taskset from all text relationships, then updates the entity and finally 
+     * creates new relationships with texts.
      * @param id    id of task set to be updated
      * @param rq    body of the request, includes arrays of ids of texts and types(classes) 
      * @return      void
@@ -123,11 +149,29 @@ public class TaskSetController {
     public ResponseEntity<Void> updateTaskSet(@PathVariable("id") Long id,@RequestBody PutTaskSetRequest rq){
         Optional<TaskSet> opt = taskSetService.find(id);
         if (opt.isEmpty()){
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().header("Description", "TaskSet not found").build();
         }
 
 
-        taskSetService.update(PutTaskSetRequest.dtoToEntityUpdater( 
+        //TODO:OPTYMALIZACJA
+        //Delete relationships with sets in OWNING SIDE
+        for(Text text : textService.findByTaskSet(opt.get())){
+            List<TaskSet> newTaskSets = new ArrayList<>();
+            
+            //DELETE THIS TASK SET FROM RELATIONSHIP
+            for (TaskSet set : text.getTaskSets()) {
+                if(set.getId() != opt.get().getId())
+                    newTaskSets.add(taskSetService.find(set.getId()).get());
+            }
+
+            //UPDATE TEXT WITH NEW TASKSETS
+            text.setTaskSets(newTaskSets);
+            //SEND UPDATE TO TEXTSERVICE
+            textService.update(text,false);
+        }
+
+
+        TaskSet taskSet = PutTaskSetRequest.dtoToEntityUpdater( 
             text_ids -> {
                 //if text_ids == null -> texts = null;
                 List<Text> texts = new ArrayList<>();
@@ -140,7 +184,15 @@ public class TaskSetController {
                 }
                 return texts;
             })
-            .apply(opt.get(),rq));
+            .apply(opt.get(),rq);
+
+        //UPDATE OWNING SIDE to persist relationship
+        for(Text text : taskSet.getTexts()){
+            List<TaskSet> newTaskSets = text.getTaskSets();
+            newTaskSets.add(taskSet);
+            text.setTaskSets(newTaskSets);
+            textService.update(text, false);
+        }
 
         return ResponseEntity.accepted().build();
     }

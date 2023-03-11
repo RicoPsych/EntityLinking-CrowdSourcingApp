@@ -2,7 +2,7 @@ POST http://localhost:8085/api/task_sets
 Content-Type: application/json
 
 {
-    "texts":[],
+    "texts":[2],
     "namedEntityTypes":[]
 }
 
@@ -19,13 +19,6 @@ Content-Type: application/json
 }
 ###
 
-POST http://localhost:8085/api/netypes
-Content-Type: application/json
-
-{
-    "id":0,
-    "taskSets":[1]
-}
 ###
 
 PUT http://localhost:8085/api/task_sets/2

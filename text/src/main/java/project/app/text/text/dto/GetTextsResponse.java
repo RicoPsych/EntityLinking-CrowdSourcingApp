@@ -34,7 +34,6 @@ public class GetTextsResponse {
     private static class _Text{
         String name;
         Long id;
-        //TODO: TAGI?
     }
 
     @Singular

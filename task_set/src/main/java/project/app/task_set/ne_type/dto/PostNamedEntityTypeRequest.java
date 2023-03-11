@@ -24,6 +24,7 @@ import project.app.task_set.task_set.TaskSet;
 public class PostNamedEntityTypeRequest {
     //private long id;
     private long[] taskSets;
+    
     /**
      * Static function to map dto to NamedEntityType representation entity
      * @return NamedEntityType

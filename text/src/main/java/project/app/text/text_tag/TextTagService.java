@@ -29,4 +29,12 @@ public class TextTagService {
         repository.delete(tag);
     }
 
+    @Transactional
+    public void update(TextTag newTag){
+        repository.findById(newTag.getId())
+        .ifPresent(tag -> {
+            tag.setTexts(newTag.getTexts());
+        });
+    }
+
 }

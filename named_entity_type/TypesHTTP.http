@@ -7,7 +7,7 @@ Content-Type: application/json
     "description":"desc",
     "namedEntityTypeParent":1,
     "textTags":[],
-    "taskSets":[]
+    "taskSets":[1]
 }
 
 ###

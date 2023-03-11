@@ -10,12 +10,6 @@ Content-Type: application/json
     "typeId":1
 }
 ###
-POST http://localhost:8084/api/texts
-Content-Type: application/json
-
-{
-}
-###
 PUT http://localhost:8084/api/texts/1/entities/1
 Content-Type: application/json
 

@@ -38,7 +38,7 @@ public class Text implements Serializable{
     @Column(name="text_id")
     private long id;
 
-    @OneToMany(mappedBy = "text") //, fetch = FetchType.EAGER ,cascade = CascadeType.
+    @OneToMany(mappedBy = "text", cascade = CascadeType.REMOVE) //, fetch = FetchType.EAGER ,cascade = CascadeType.
     private List<NamedEntity> namedEntities;
 
 }

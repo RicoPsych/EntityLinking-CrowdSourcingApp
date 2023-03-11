@@ -5,8 +5,8 @@ Content-Type: application/json
 {
     "name":"TAG1",
     "description":"desc1",
-    "namedEntityTypes":[],
-    "texts":[]
+    "namedEntityTypes":[1],
+    "texts":[2]
 }
 ###
 

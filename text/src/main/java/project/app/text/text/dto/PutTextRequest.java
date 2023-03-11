@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import project.app.text.task_set.TaskSet;
 import project.app.text.text.Text;
 import project.app.text.text_tag.TextTag;
 
@@ -25,16 +26,18 @@ import project.app.text.text_tag.TextTag;
 public class PutTextRequest {
     private String name;
     private String content;
-    private Long[] tag_ids;
-    private Long[] task_ids;
+    private Long[] taskSets;
+    private Long[] textTags;
 
-    public static BiFunction<Text,PutTextRequest,Text> dtoToEntityUpdater(Function<Long[],List<TextTag>> tagGetter){
+    public static BiFunction<Text,PutTextRequest,Text> dtoToEntityUpdater(
+        Function<Long[],List<TextTag>> tagGetter,
+        Function<Long[],List<TaskSet>> taskSetGetter
+    ){
         return (text, request) -> {
             text.setName(request.getName());
             text.setContent(request.getContent());
-            
-            text.setTags(tagGetter.apply(request.getTag_ids()));
-            //text.tasks(taskGetter.apply(request.getTask_ids()))
+            text.setTextTags(tagGetter.apply(request.getTextTags()));
+            text.setTaskSets(taskSetGetter.apply(request.getTaskSets()));            
             return text;
         };
     }

@@ -22,8 +22,7 @@ import project.app.text.text.Text;
 @NoArgsConstructor
 @Builder
 public class PutTaskSetRequest {
-    private Long[] texts;
-    private Long[] namedEntityTypes;    
+    private long[] texts;
     /**
      * <p> PUT </p>
      * Static function to map DTO to TaskSet entity for updating purposes
@@ -31,9 +30,9 @@ public class PutTaskSetRequest {
      * @param typeGetter function for getting NamedEntitiesType entities list from ids list
      * @return TaskSet 
      */
-    public static BiFunction<TaskSet,PutTaskSetRequest,TaskSet> dtoToEntityUpdater(Function<Long[],List<Text>> textGetter){
+    public static BiFunction<TaskSet,PutTaskSetRequest,TaskSet> dtoToEntityUpdater(
+        Function<long[],List<Text>> textGetter){
         return (taskSet, request) -> {
-            
             taskSet.setTexts(textGetter.apply(request.getTexts()));
             return taskSet;
         };
