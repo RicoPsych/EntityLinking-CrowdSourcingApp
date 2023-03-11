@@ -5,8 +5,8 @@ Content-Type: application/json
 {
     "name": "text1",
     "content": "content",
-    "textTags":[1],
-    "taskSets":[1]
+    "textTags":[1,2,4],
+    "taskSets":[]
 }
 ###
 PUT http://localhost:8081/api/texts/1

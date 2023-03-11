@@ -3,14 +3,16 @@ POST http://localhost:8082/api/tags
 Content-Type: application/json
 
 {
-    "name":"TAG1",
+    "name":"TAG4",
     "description":"desc1",
-    "namedEntityTypes":[1],
-    "texts":[2]
+    "namedEntityTypes":[2],
+    "texts":[]
 }
 ###
 
 GET http://localhost:8082/api/tags/1
+###
+GET http://localhost:8082/api/tags
 ###
 
 PUT http://localhost:8082/api/tags/1

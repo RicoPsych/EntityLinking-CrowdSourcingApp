@@ -3,17 +3,15 @@ POST http://localhost:8083/api/netypes
 Content-Type: application/json
 
 {
-    "name":"1",
+    "name":"2",
     "description":"desc",
     "namedEntityTypeParent":1,
     "textTags":[],
-    "taskSets":[1]
+    "taskSets":[]
 }
 
 ###
-GET http://localhost:8083/api/netypes/1
-###
-GET http://localhost:8083/api/task_sets/1
+GET http://localhost:8083/api/netypes/2
 ###
 PUT http://localhost:8083/api/netypes/2
 Content-Type: application/json
@@ -30,19 +28,6 @@ Content-Type: application/json
 
 DELETE http://localhost:8083/api/netypes/1
 ###
-GET http://localhost:8083/api/netypes/1
+GET http://localhost:8083/api/netypes/2
+
 ###
-POST http://localhost:8083/api/tags
-Content-Type: application/json
-
-{
-    "namedEntityTypes":[]
-}
-###
-
-POST http://localhost:8083/api/task_sets
-Content-Type: application/json
-
-{
-    "namedEntityTypes":[]
-}

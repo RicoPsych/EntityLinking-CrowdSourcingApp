@@ -23,14 +23,26 @@ public class GetNamedEntityTypeResponse {
     private String name;
     private String description;
     private Long namedEntityTypeParent;
-    //private Long[] namedEntityTypesChild; //????
+    private long[] textTags;
+    private long[] taskSets;
 
     public static Function<NamedEntityType,GetNamedEntityTypeResponse> entityToDtoMapper(){
-        return type -> GetNamedEntityTypeResponse.builder()
+        
+        
+        return type -> {
+            Long parent = null; 
+            if(type.getNamedEntityTypeParent() != null){
+                parent = type.getNamedEntityTypeParent().getId();
+            }
+
+            return GetNamedEntityTypeResponse.builder()
                         .id(type.getId())
                         .name(type.getName())
                         .description(type.getDescription())
-                        .namedEntityTypeParent(type.getNamedEntityTypeParent().getId())
+                        .namedEntityTypeParent(parent) //nullable
+                        .textTags(type.getTextTags().stream().mapToLong(tag->tag.getId()).toArray())
+                        .taskSets(type.getTaskSets().stream().mapToLong(set->set.getId()).toArray())
                         .build();
+                    };
     }
 }
