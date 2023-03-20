@@ -52,12 +52,10 @@ public class NamedEntityController {
     @GetMapping("{id}")
     public ResponseEntity<GetNamedEntityResponse> getNamedEntity(@PathVariable("id") Long id,@PathVariable("text_id") Long text_id){
         Optional<NamedEntity> opt = namedEntityService.find(id);
-        if (opt.isPresent()){
-            return ResponseEntity.ok(GetNamedEntityResponse.entityToDtoMapper().apply(opt.get()));
-        }
-        else{
+        if (opt.isEmpty()){
             return ResponseEntity.notFound().header("Description", "Named Entity not found").build();
         }
+        return ResponseEntity.ok(GetNamedEntityResponse.entityToDtoMapper().apply(opt.get()));          
     }
 
     @PostMapping
@@ -76,6 +74,7 @@ public class NamedEntityController {
             return _opt.get();
         }).apply(rq);
             entity = namedEntityService.add(entity);
+
         return ResponseEntity
             .created(builder
                 .pathSegment("api","texts","{text_id}","entities","{id}")
@@ -108,8 +107,8 @@ public class NamedEntityController {
                 return null;
             }
             return _opt.get();
-        })
-        .apply(opt.get(),rq));
+        }).apply(opt.get(),rq));
+        
         return ResponseEntity.accepted().build();
 
     }

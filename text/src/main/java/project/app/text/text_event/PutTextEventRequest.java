@@ -23,11 +23,10 @@ public class PutTextEventRequest {
     private long[] taskSets;
 
     public static Function<Text,PutTextEventRequest> entityToDtoMapper(){
-        return (entity) -> {
-            return PutTextEventRequest.builder()
+        return entity -> PutTextEventRequest.builder()
             .textTags(entity.getTextTags().stream().mapToLong(tag->tag.getId()).toArray())
             .taskSets(entity.getTaskSets().stream().mapToLong(taskSet->taskSet.getId()).toArray())
             .build();
-        };
+
     }
 }

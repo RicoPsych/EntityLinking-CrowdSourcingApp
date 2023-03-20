@@ -2,7 +2,7 @@ POST http://localhost:8085/api/task_sets
 Content-Type: application/json
 
 {
-    "texts":[2],
+    "texts":[],
     "namedEntityTypes":[]
 }
 

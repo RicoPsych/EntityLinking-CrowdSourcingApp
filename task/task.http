@@ -1,0 +1,34 @@
+###
+POST http://localhost:8086/api/task_sets/1/tasks
+Content-Type: application/json
+
+{
+    "indexStart":1,
+    "indexEnd":2,
+    "startDate":"2001-10-10",
+    "endDate":"2001-10-10",
+    "submitionsNum":1,
+    "taskSet":1
+}
+###
+    "startDate":"10-10-2022",
+###
+PUT http://localhost:8086/api/task_sets/1/tasks/1
+Content-Type: application/json
+
+{
+    "indexStart":2,
+    "indexEnd":3,
+    "startDate":"2001-10-10",
+    "endDate":"2001-10-10",
+    "submitionsNum":5,
+    "taskSet":2
+}
+###
+GET http://localhost:8086/api/task_sets/1/tasks/1
+###
+
+GET http://localhost:8086/api/task_sets/2/tasks
+###
+DELETE http://localhost:8086/api/task_sets/2/tasks/1
+###

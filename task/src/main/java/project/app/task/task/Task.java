@@ -1,6 +1,8 @@
-package project.app.named_entity.named_entity;
+package project.app.task.task;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,6 +12,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -17,9 +21,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import project.app.named_entity.named_entity_type.NamedEntityType;
-import project.app.named_entity.text.Text;
-
+import project.app.task.task_set.TaskSet;
 
 @ToString
 @Setter
@@ -30,29 +32,32 @@ import project.app.named_entity.text.Text;
 @Builder
 
 @Entity
-@Table(name="named_entity")
-public class NamedEntity implements Serializable{
+@Table(name = "tasks")
+public class Task implements Serializable {
     @Id
+    @Column(name = "task_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "named_entity_id")
-    private Long id;
+    private long id;
 
-    @Column(name="index_start")
+    @Column(name = "index_start")
     private Long indexStart;
 
-    @Column(name="index_end")
+    @Column(name = "index_end")
     private Long indexEnd;
 
-    //Knowledge Base link
-    @Column(name="kb_link",nullable = true)
-    private String kb_link;
-    
-    @ManyToOne
-    @JoinColumn(name="named_entity_type_id",nullable = true)
-    private NamedEntityType type;
+    @Column(name = "start_date")
+    @Temporal(TemporalType.DATE)
+    private LocalDate startDate;
 
-    //ID?
+    @Column(name = "end_date")
+    @Temporal(TemporalType.DATE)
+    private LocalDate endDate;
+    
+    @Column(name = "submitions_number")
+    private Long submitionsNum;
+
     @ManyToOne
-    @JoinColumn(name="text_id")
-    private Text text;
+    @JoinColumn(name="task_set_id")
+    private TaskSet taskSet;
 }
+
