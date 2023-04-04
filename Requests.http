@@ -1,0 +1,121 @@
+###
+POST http://localhost:8080/api/texts
+Content-Type: application/json
+
+{
+    "name": "text1",
+    "content": "content",
+    "textTags":[1,2,4],
+    "taskSets":[]
+}
+###
+POST http://localhost:8080/api/texts/1/entities
+Content-Type: application/json
+
+{
+    "indexStart":1,
+    "indexEnd":2,
+    "textId":1,
+    "kbLink":"link",
+    "typeId":1
+}
+###
+
+POST http://localhost:8080/api/tags
+Content-Type: application/json
+
+{
+    "name":"TAG2",
+    "description":"desc1",
+    "namedEntityTypes":[2],
+    "texts":[]
+}
+###
+
+POST http://localhost:8080/api/task_sets
+Content-Type: application/json
+
+{
+    "texts":[1,2],
+    "namedEntityTypes":[3]
+}
+
+###
+
+POST http://localhost:8080/api/task_sets/1/tasks
+Content-Type: application/json
+
+{
+    "indexStart":1,
+    "indexEnd":2,
+    "startDate":"2001-10-10",
+    "endDate":"2001-10-10",
+    "submitionsNum":1,
+    "taskSet":1
+}
+###
+
+POST http://localhost:8080/api/netypes
+Content-Type: application/json
+
+{
+    "name":"2",
+    "description":"desc",
+    "namedEntityTypeParent":1,
+    "textTags":[],
+    "taskSets":[]
+}
+
+###
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PUT http://localhost:8080/api/texts/1
+Content-Type: application/json
+
+{
+    "name": "Big",
+    "content": "Chungus",
+    "textTags":[1],
+    "taskSets":[1]
+}
+
+###
+GET http://localhost:8080/api/texts
+###
+GET http://localhost:8080/api/texts/1
+
+
+###
+GET http://localhost:8080/api/texts/1/entities
+
+###
+GET http://localhost:8080/api/tags
+###
+GET http://localhost:8080/api/tags/1
+###
+
+GET http://localhost:8080/api/netypes
+###
+GET http://localhost:8080/api/task_sets
+###
+GET http://localhost:8080/api/task_sets/1/tasks/1
+###
+
+
+
+DELETE http://localhost:8080/api/texts/1
+###
