@@ -53,6 +53,31 @@ Content-Type: application/json
     "submitionsNum":1,
     "taskSet":1
 }
+
+###
+POST http://localhost:8086/api/task_sets/1/tasks/bulk
+Content-Type: application/json
+
+{
+    "tasksRq":
+    [{
+        "indexStart":1,
+        "indexEnd":2,
+        "startDate":"2001-10-10",
+        "endDate":"2001-10-10",
+        "submitionsNum":1,
+        "taskSet":1
+        },
+        {
+        "indexStart":4,
+        "indexEnd":6,
+        "startDate":"2001-10-10",
+        "endDate":"2001-10-10",
+        "submitionsNum":1,
+        "taskSet":1
+        }
+    ]
+}
 ###
 
 POST http://localhost:8080/api/netypes
@@ -112,6 +137,9 @@ GET http://localhost:8080/api/netypes
 ###
 GET http://localhost:8080/api/task_sets
 ###
+GET http://localhost:8080/api/task_sets/1/tasks
+###
+
 GET http://localhost:8080/api/task_sets/1/tasks/1
 ###
 
