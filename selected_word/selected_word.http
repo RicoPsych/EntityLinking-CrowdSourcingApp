@@ -1,0 +1,34 @@
+###
+POST http://localhost:8092/api/response/3/selected_word
+Content-Type: application/json
+
+{
+    "start_index":8,
+    "end_index":101
+}
+
+###
+POST http://localhost:8092/api/selected_word
+Content-Type: application/json
+
+{
+    "start_index":60,
+    "end_index":99
+}
+###
+PUT http://localhost:8092/api/selected_word/1
+Content-Type: application/json
+
+{
+     "start_index":88,
+    "end_index":10
+}
+
+###
+GET http://localhost:8092/api/response/3/selected_word
+###
+GET http://localhost:8092/api/selected_word/2
+###
+
+GET http://localhost:8092/api/response/3
+###

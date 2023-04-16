@@ -1,4 +1,4 @@
-package project.app.response.response;
+package project.app.selected_word.selected_word;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -12,12 +12,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
+import project.app.selected_word.response.Response;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @ToString
@@ -29,14 +31,23 @@ import jakarta.persistence.Table;
 @Builder
 
 @Entity
-@Table(name="user_response")
-public class Response implements Serializable{
+@Table(name="selected_word")
+public class SelectedWord implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)    
-    @Column(name="user_responce_id")
+    @Column(name="selected_Word_id")
     private long id;
 
-    @Column(name="upload_date")
-    private LocalDate date;
+    @Column(name="index_start")
+    private long indexStart;
+
+    @Column(name="index_end")
+    private long indexEnd;
+
+    @ManyToOne
+    @JoinColumn(name="user_responce_id")
+    private Response response;
+
+
 }
