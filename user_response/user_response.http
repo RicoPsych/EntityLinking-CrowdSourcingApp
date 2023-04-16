@@ -1,0 +1,30 @@
+###
+POST http://localhost:8090/api/response
+Content-Type: application/json
+
+{
+    "date": "2020-09-03"
+}
+
+###
+POST http://localhost:8090/api/response
+Content-Type: application/json
+
+{
+    "date": "2020-09-04"
+}
+###
+PUT http://localhost:8090/api/response/1
+Content-Type: application/json
+
+{
+    "date": "2019-01-01"
+}
+
+###
+GET http://localhost:8090/api/response
+###
+GET http://localhost:8090/api/response/2
+###
+
+DELETE http://localhost:8090/api/response/3

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserResponseRepository extends JpaRepository<Response,Long>{
-    public List<Response> findByTask(long task_id);
-    public List<Response> findByText(long text_id);
+    //public List<Response> findByTask(long task_id);
+    //public List<Response> findByText(long text_id);
 
 }

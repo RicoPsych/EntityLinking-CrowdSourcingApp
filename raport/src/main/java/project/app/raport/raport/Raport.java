@@ -1,9 +1,5 @@
-package project.app.response.response;
+package project.app.raport.raport;
 
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,12 +8,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
+import project.app.raport.response.Response;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @ToString
@@ -29,14 +27,20 @@ import jakarta.persistence.Table;
 @Builder
 
 @Entity
-@Table(name="user_response")
-public class Response implements Serializable{
+@Table(name="raport")
+public class Raport {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)    
-    @Column(name="user_responce_id")
+    @Column(name="raport_id")
     private long id;
 
-    @Column(name="upload_date")
-    private LocalDate date;
+    @Column(name="content")
+    private String content;
+
+    @ManyToOne
+    @JoinColumn(name="user_responce_id")
+    private Response response;
+
+    
 }
