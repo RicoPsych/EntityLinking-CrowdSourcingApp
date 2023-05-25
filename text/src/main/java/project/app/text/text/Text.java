@@ -44,7 +44,7 @@ public class Text implements Serializable{
     @Column(name="text_name")
     private String name;
 
-    @Column(name="content")
+    @Column(name="content",columnDefinition = "LONGTEXT")
     private String content;
 
     @ManyToMany(fetch = FetchType.EAGER)

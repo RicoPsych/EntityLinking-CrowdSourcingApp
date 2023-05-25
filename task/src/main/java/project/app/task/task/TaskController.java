@@ -80,8 +80,8 @@ public class TaskController {
         }
 
         List<Task> tasks = PostTasksRequest.dtoToEntityMapper(() -> opt.get()).apply(rq);
-        for(Task task : tasks){
-            task = taskService.add(task);
+        for(int i = 0; i< tasks.size() ; i++){
+            taskService.add(tasks.get(i));
         }
         return ResponseEntity
         .created(builder

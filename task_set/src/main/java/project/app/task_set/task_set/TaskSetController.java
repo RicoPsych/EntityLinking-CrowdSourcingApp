@@ -1,10 +1,13 @@
 package project.app.task_set.task_set;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +17,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import project.app.task_set.ne_type.NamedEntityType;
 import project.app.task_set.ne_type.NamedEntityTypeService;
+import project.app.task_set.task.PostTasksRequest;
 import project.app.task_set.task_set.dto.*;
 import project.app.task_set.text.Text;
 import project.app.task_set.text.TextService;
@@ -62,7 +70,7 @@ public class TaskSetController {
     public ResponseEntity<GetTaskSetResponse> getTaskSet(@PathVariable("id") Long id){
         Optional<TaskSet> opt = taskSetService.find(id);
         if (opt.isEmpty()){
-            return ResponseEntity.notFound().header("Description", "Task not found").build();
+            return ResponseEntity.notFound().header("Description", "TaskSet not found").build();
         }
         return ResponseEntity.ok(GetTaskSetResponse.entityToDtoMapper().apply(opt.get()));
 
@@ -111,6 +119,61 @@ public class TaskSetController {
             .build();  
     }
 
+
+    @PostMapping("{id}/create")
+    public ResponseEntity<Void> createNewTasks(@PathVariable("id") Long id, @Value("${services.tasks}") String task_url,@Value("${services.texts}") String text_url){
+        Optional<TaskSet> opt = taskSetService.find(id);
+        if (opt.isEmpty()){
+            return ResponseEntity.notFound().header("Description", "TaskSet not found").build();
+        }
+
+        RestTemplate taskController = new RestTemplateBuilder().rootUri(task_url).build();
+        RestTemplate textController = new RestTemplateBuilder().rootUri(text_url).build();
+
+
+        
+        for (Text text : opt.get().getTexts()) {
+            ResponseEntity<String> response = textController.getForEntity("/api/texts/{text_id}", String.class, text.getId());
+            ObjectMapper mapper = new ObjectMapper();
+
+            String content = "";
+            long textId = -1;
+            try {
+                JsonNode root = mapper.readTree(response.getBody());
+                JsonNode content_node = root.path("content");
+                JsonNode textId_node = root.path("id");
+                content = content_node.asText();
+                textId = textId_node.asLong();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if (content == ""){
+                return ResponseEntity.noContent().build();
+            }
+            
+            
+            List<Long> indexes = new ArrayList<Long>();
+            indexes.add(0l);
+            int size = 0;
+            String[] split =  content.split("\\.");
+
+            for (int i = 0; i< split.length;i++){
+                size += split[i].length();
+                if(size > 50 || i == split.length-1){
+                    indexes.add(indexes.get(indexes.size()-1)+size);
+                    size = 0;
+                }
+            }
+
+            PostTasksRequest rq = PostTasksRequest.CreateRequest(id,textId, indexes.stream().mapToLong(index->index.longValue()).toArray(), LocalDate.now().toString()).get();
+            taskController.postForLocation("/api/task_sets/{task_set_id}/tasks/bulk", rq, id);
+        }
+        
+
+
+        return ResponseEntity.created(null).build();
+    }
     /**
      * Deletes Task Set with given id, this also deletes all tasks connected with this Task Set
      * @param id    id of task set to be deleted

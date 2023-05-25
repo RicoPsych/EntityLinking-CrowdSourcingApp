@@ -24,6 +24,7 @@ public class GetTaskResponse {
     private long indexEnd;
     private String startDate;
     private String endDate;
+    private long textId;
     private long submitionsNum;
     private long taskSetId;
 
@@ -34,6 +35,7 @@ public class GetTaskResponse {
                 .indexEnd(task.getIndexEnd())
             //    .startDate(task.getStartDate().toString())
             //    .endDate(task.getEndDate().toString())
+                .textId(task.getTextId())
                 .submitionsNum(task.getSubmitionsNum())
                 .taskSetId(task.getTaskSet().getId())
             .build();
