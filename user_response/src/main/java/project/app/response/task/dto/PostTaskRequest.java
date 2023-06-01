@@ -1,9 +1,7 @@
-package project.app.response.response.dto;
+package project.app.response.task.dto;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,17 +21,12 @@ import project.app.response.task.Task;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+public class PostTaskRequest {
+    private long id;
 
-public class PostUserResponseRequest {
+    public static Function<PostTaskRequest, Task> dtoToEntityMapper(){
 
-    private String date;
-
-    public static Function<PostUserResponseRequest, Response> dtoToEntityMapper(Supplier<Task> taskGetter){
-
-        return request -> Response.builder()
-            .date(LocalDate.parse(request.getDate()))
-            .task(taskGetter.get())
+        return request -> Task.builder()
             .build();
     }
-   
 }

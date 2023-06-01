@@ -26,19 +26,22 @@ public class TaskEventRepository {
 
     public void delete(Task task){
         for(RestTemplate template : restTemplates){
-            template.delete("/api/task_set/{task_set}/tasks/{task}",task.getTaskSet().getId() ,task.getId());
+            template.delete("/api/task_sets/{task_set}/tasks/{task}",task.getTaskSet().getId() ,task.getId());
         }
     }
 
     public void save(Task task){
         for(RestTemplate template : restTemplates){
-            template.postForLocation("/api/task_set/{task_set}/tasks", PostTaskEventRequest.entityToDtoMapper().apply(task) ,task.getTaskSet().getId());
+            //template.postForLocation("/api/task_sets/{task_set}/tasks", PostTaskEventRequest.entityToDtoMapper().apply(task) ,task.getTaskSet().getId());
+            //template.postForLocation("/api/tasks/{task}", PostTaskEventRequest.entityToDtoMapper().apply(task), task.getId());
+            template.postForLocation("/api/tasks", PostTaskEventRequest.entityToDtoMapper().apply(task));
+            //template.postForLocation("/api/task_sets", PostTaskSetEventRequest.entityToDtoMapper().apply(set));
         }
     }
 
     public void update(Task task){
         for(RestTemplate template : restTemplates){
-            template.put("/api/task_set/{task_set}/tasks/{task}", PutTaskEventRequest.entityToDtoMapper().apply(task),task.getTaskSet().getId(),task.getId());
+            template.put("/api/task_sets/{task_set}/tasks/{task}", PutTaskEventRequest.entityToDtoMapper().apply(task),task.getTaskSet().getId(),task.getId());
         }
     }
 }

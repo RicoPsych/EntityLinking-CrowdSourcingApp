@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import project.app.response.response_event.ResponseEventRepository;
+import project.app.response.task.Task;
 
 @Service
 public class UserResponseService {
@@ -21,36 +22,18 @@ public class UserResponseService {
         this.eventRepository = eventRepository;
     }
 
-    /**
-     * Find a user response by id
-     * @param id id of the response
-     * @return Response if exists
-     */
+
     public Optional<Response> find(Long id){
         return response_repository.findById(id);
     }
 
-    /**
-     * Finds all user responses
-     * @return list of responses
-     */
     public List<Response> findAll(){
         return response_repository.findAll();
     }
 
-    /**
-     * Finds all responses to a task 
-     * @param task_id id of a task
-     * @return List of responses
-     */
-    // public List<Response> findByTask(Long task_id){
-    //     return response_repository.findByTask(task_id);
-    // }
-
-    // public List<Response> findByText(Long text_id){
-    //     return response_repository.findByText(text_id);
-    // }
-
+    public List<Response> findByTask(Task task){
+        return response_repository.findByTask(task);
+    }
 
     @Transactional
     public Response add(Response response){

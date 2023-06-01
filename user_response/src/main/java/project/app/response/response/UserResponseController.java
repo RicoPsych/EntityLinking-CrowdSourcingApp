@@ -18,26 +18,39 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import project.app.response.response.dto.*;
+import project.app.response.task.*;
+import project.app.response.task.Task;
 
 @RestController
-@RequestMapping("api/response")
+@RequestMapping("api/tasks/{task_id}/response")
 public class UserResponseController {
 
     private UserResponseService userResponseService;
 
+    private TaskService taskService;
+
     @Autowired
-    public UserResponseController(UserResponseService service){
+    public UserResponseController(UserResponseService service, TaskService taskService){
 
         this.userResponseService = service;
+        this.taskService = taskService;
     }
 
     @GetMapping
-    public ResponseEntity <GetUserResponsesResponse> getUserResponses(){
-        return ResponseEntity.ok(GetUserResponsesResponse.entityToDtoMapper().apply(userResponseService.findAll()));
+    public ResponseEntity <GetUserResponsesResponse> getUserResponses(@PathVariable("task_id") Long task_id){
+
+        Optional<Task> opt = taskService.find(task_id);
+        if(opt.isEmpty()){
+            return ResponseEntity.notFound().header("Description", "Task not found").build();
+        }
+
+        List<Response> responses = userResponseService.findByTask(opt.get());
+        
+        return ResponseEntity.ok(GetUserResponsesResponse.entityToDtoMapper().apply(responses));
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<GetUserResponseResponse> getUserResponse(@PathVariable("id") Long id){
+    public ResponseEntity<GetUserResponseResponse> getUserResponse(@PathVariable("id") Long id, @PathVariable("task_id") Long task_id){
         Optional<Response> opt = userResponseService.find(id);
         if (opt.isEmpty()){
             return ResponseEntity.notFound().header("Description", "UserResponse not found").build();
@@ -47,15 +60,23 @@ public class UserResponseController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> postUserResponce(@RequestBody PostUserResponseRequest rq, UriComponentsBuilder builder){
-        Response response = PostUserResponseRequest.dtoToEntityMapper().apply(rq);
+    public ResponseEntity<Void> postUserResponce(@RequestBody PostUserResponseRequest rq, @PathVariable("task_id") Long task_id, UriComponentsBuilder builder){
+
+
+        Optional<Task> opt = taskService.find(task_id);
+        if(opt.isEmpty()){
+            return ResponseEntity.notFound().header("Description", "Task not found").build();
+        }
+            
+        Response response = PostUserResponseRequest.dtoToEntityMapper(() -> opt.get()).apply(rq);
         response = userResponseService.add(response);
 
         return ResponseEntity
             .created(builder
-                .pathSegment("api","response","{id}")
-                .buildAndExpand(response.getId()).toUri())
-            .build();  
+                .pathSegment("api","task","{task_id}","response", "{id}")
+                .buildAndExpand(response.getTask().getId(),response.getId()).toUri())
+            .build(); 
+
     }
 
     @DeleteMapping("{id}")
@@ -69,7 +90,7 @@ public class UserResponseController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Void> updateUserRespose(@PathVariable("id") Long id,@RequestBody PutUserResponseRequest rq){
+    public ResponseEntity<Void> updateUserRespose(@PathVariable("id") Long id, @RequestBody PutUserResponseRequest rq){
         Optional<Response> opt = userResponseService.find(id);
         if (opt.isEmpty()){
             return ResponseEntity.notFound().header("Description", "UserResponse not found").build();

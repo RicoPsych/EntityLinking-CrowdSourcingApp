@@ -1,20 +1,13 @@
 ###
 
-POST http://localhost:8091/api/response/4/raport
+POST http://localhost:8089/api/response/1/raport
 Content-Type: application/json
 
 {
     "content": "AAAAAAAAAAAAAAAAAAAAAA"
 }
 ###
-POST http://localhost:8091/api/raport
-Content-Type: application/json
-
-{
-    "content": "BBBBBBBBBBBBBBBBBBBBB"
-}
-###
-PUT http://localhost:8091/api/response/4/raport/1
+PUT http://localhost:8089/api/response/1/raport/2
 Content-Type: application/json
 
 {
@@ -22,7 +15,7 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:8091/api/response/4/raport
+GET http://localhost:8089/api/response/1/raport
 ###
-GET http://localhost:8091/api/raport/2
+DELETE http://localhost:8089/api/response/1/raport/1
 ###
