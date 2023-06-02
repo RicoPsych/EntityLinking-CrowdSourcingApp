@@ -53,6 +53,9 @@ public class Task implements Serializable {
     @Temporal(TemporalType.DATE)
     private LocalDate endDate;
     
+    @Column(name = "text_id")
+    private long textId;
+
     @Column(name = "submitions_number")
     private Long submitionsNum;
 

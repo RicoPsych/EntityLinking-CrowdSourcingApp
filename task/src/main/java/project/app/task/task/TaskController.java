@@ -18,6 +18,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import project.app.task.task.dto.GetTaskResponse;
 import project.app.task.task.dto.GetTasksResponse;
 import project.app.task.task.dto.PostTaskRequest;
+import project.app.task.task.dto.PostTasksRequest;
 import project.app.task.task.dto.PutTaskRequest;
 import project.app.task.task_set.TaskSet;
 import project.app.task.task_set.TaskSetService;
@@ -70,6 +71,26 @@ public class TaskController {
             .buildAndExpand(task.getTaskSet().getId(),task.getId()).toUri())
         .build();  
     }
+
+    @PostMapping("bulk")
+    public ResponseEntity<Void> postTasks(@RequestBody PostTasksRequest rq, @PathVariable("task_set_id") Long task_set_id , UriComponentsBuilder builder){
+        Optional<TaskSet> opt = taskSetService.find(task_set_id);
+        if(opt.isEmpty()){
+            return ResponseEntity.notFound().header("Description", "TaskSet Not found").build();
+        }
+
+        List<Task> tasks = PostTasksRequest.dtoToEntityMapper(() -> opt.get()).apply(rq);
+        for(int i = 0; i< tasks.size() ; i++){
+            taskService.add(tasks.get(i));
+        }
+        return ResponseEntity
+        .created(builder
+            .pathSegment("api","task_sets","{task_set_id}","tasks","{first_id}-{last_id}")
+            .buildAndExpand(task_set_id,tasks.get(0).getId(),tasks.get(tasks.size()-1).getId())
+            .toUri())
+        .build();  
+    }
+
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable("id") Long id,@PathVariable("task_set_id") Long task_set){

@@ -3,9 +3,9 @@ POST http://localhost:8080/api/texts
 Content-Type: application/json
 
 {
-    "name": "text1",
-    "content": "content",
-    "textTags":[1,2,4],
+    "name": "text2",
+    "content": "contentfdsfndslkfdlfmfldkjngkjlfdnglkjdfngfd. jgfdhgklfdhgkjdfhgkjdfhgkjhdfkgjdfhkgjdfhgkjdfhgjkdfhgkjdfhgkjdfhkjdfhgkjdfhgkjdfhgkjdfhgkjdfhgkdjfhgkjdfhgkjdfhgkj. hkiljgfjnhglkojbfdnhlkfgjlouhjtrklgjdfkljgjndfljkgndflkgjndfl;kgjdflkgjdflkgjdflkgjfldkjglkdfjglkdfgjlkfdgjdf. fdsfdsfdsfsdfsdfdsfds",
+    "textTags":[],
     "taskSets":[]
 }
 ###
@@ -25,6 +25,17 @@ POST http://localhost:8080/api/tags
 Content-Type: application/json
 
 {
+    "name":"TAG1",
+    "description":"desc1",
+    "namedEntityTypes":[2],
+    "texts":[]
+}
+###
+
+POST http://localhost:8080/api/tags
+Content-Type: application/json
+
+{
     "name":"TAG2",
     "description":"desc1",
     "namedEntityTypes":[2],
@@ -37,11 +48,23 @@ Content-Type: application/json
 
 {
     "texts":[1,2],
-    "namedEntityTypes":[3]
+    "namedEntityTypes":[1]
 }
 
 ###
 
+POST http://localhost:8080/api/netypes
+Content-Type: application/json
+
+{
+    "name":"type 1",
+    "description":"desc",
+    "namedEntityTypeParent":1,
+    "textTags":[],
+    "taskSets":[]
+}
+
+###
 POST http://localhost:8080/api/task_sets/1/tasks
 Content-Type: application/json
 
@@ -54,19 +77,37 @@ Content-Type: application/json
     "taskSet":1
 }
 ###
-
-POST http://localhost:8080/api/netypes
+POST http://localhost:8080/api/task_sets/1/create
 Content-Type: application/json
 
 {
-    "name":"2",
-    "description":"desc",
-    "namedEntityTypeParent":1,
-    "textTags":[],
-    "taskSets":[]
 }
-
 ###
+POST http://localhost:8086/api/task_sets/1/tasks/bulk
+Content-Type: application/json
+
+{
+    "tasksRq":
+    [{
+        "indexStart":1,
+        "indexEnd":2,
+        "startDate":"2001-10-10",
+        "endDate":"2001-10-10",
+        "submitionsNum":1,
+        "taskSet":1
+        },
+        {
+        "indexStart":4,
+        "indexEnd":6,
+        "startDate":"2001-10-10",
+        "endDate":"2001-10-10",
+        "submitionsNum":1,
+        "taskSet":1
+        }
+    ]
+}
+###
+
 
 
 
@@ -112,7 +153,12 @@ GET http://localhost:8080/api/netypes
 ###
 GET http://localhost:8080/api/task_sets
 ###
-GET http://localhost:8080/api/task_sets/1/tasks/1
+GET http://localhost:8080/api/task_sets/1
+###
+GET http://localhost:8080/api/task_sets/1/tasks
+###
+
+GET http://localhost:8080/api/task_sets/1/tasks/2
 ###
 
 

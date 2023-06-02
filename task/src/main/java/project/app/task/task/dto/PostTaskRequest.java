@@ -27,6 +27,7 @@ public class PostTaskRequest {
     private long indexEnd;
     private String startDate;
     private String endDate;
+    private long textId;
     private long submitionsNum;
     private long taskSet;
 
@@ -41,6 +42,7 @@ public class PostTaskRequest {
 
             .startDate(LocalDate.parse(request.getStartDate()))
             .endDate(LocalDate.parse(request.getEndDate()))
+            .textId(request.getTextId())
             .submitionsNum(request.getSubmitionsNum())
             .taskSet(taskSetGetter.get())//.apply(request.getTaskSetId()))
             .build();
