@@ -1,10 +1,10 @@
-package project.app.template;
+package project.app.named_entity;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TemplateApplicationTests {
+class NamedEntityApplicationTests {
 
 	@Test
 	void contextLoads() {

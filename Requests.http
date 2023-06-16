@@ -158,10 +158,13 @@ GET http://localhost:8080/api/task_sets/1
 GET http://localhost:8080/api/task_sets/1/tasks
 ###
 
-GET http://localhost:8080/api/task_sets/1/tasks/2
+GET http://localhost:8080/api/task_sets/1/tasks/1
 ###
 
 
 
 DELETE http://localhost:8080/api/texts/1
+###
+
+DELETE http://localhost:8080/api/task_sets/1
 ###
