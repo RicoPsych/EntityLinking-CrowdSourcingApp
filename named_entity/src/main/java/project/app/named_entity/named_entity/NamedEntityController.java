@@ -17,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import project.app.named_entity.named_entity.dto.GetNamedEntitiesResponse;
 import project.app.named_entity.named_entity.dto.GetNamedEntityResponse;
+import project.app.named_entity.named_entity.dto.PostNamedEntitiesRequest;
 import project.app.named_entity.named_entity.dto.PostNamedEntityRequest;
 import project.app.named_entity.named_entity.dto.PutNamedEntityRequest;
 import project.app.named_entity.named_entity_type.NamedEntityType;
@@ -81,6 +82,34 @@ public class NamedEntityController {
                 .buildAndExpand(entity.getText().getId(),entity.getId()).toUri())
             .build();  
     }
+
+    @PostMapping("bulk")
+    public ResponseEntity<Void> postNamedEntities(@RequestBody PostNamedEntitiesRequest rq,@PathVariable("text_id") Long text_id ,UriComponentsBuilder builder){
+        Optional<Text> opt = textService.find(text_id);
+        if(opt.isEmpty()){
+            return ResponseEntity.notFound().header("Description", "Text not found").build();
+        }
+        
+        List<NamedEntity> entities = PostNamedEntitiesRequest.dtoToEntityMapper(() -> opt.get(), 
+        type_id-> {
+            Optional<NamedEntityType> _opt = namedEntityTypeService.find(type_id);
+            if(_opt.isEmpty()){
+                return null;
+            }
+            return _opt.get();
+        }).apply(rq);
+
+        for(int i = 0; i<entities.size(); i++){
+            namedEntityService.add(entities.get(i));
+        }
+
+        return ResponseEntity
+            .created(builder
+                .pathSegment("api","texts","{text_id}","entities","{first_id}-{last_id}")
+                .buildAndExpand(entities.get(0).getText().getId(),entities.get(0).getId(),entities.get(entities.size()-1).getId()).toUri())
+            .build();  
+    }
+
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteNamedEntity(@PathVariable("id") Long id){
