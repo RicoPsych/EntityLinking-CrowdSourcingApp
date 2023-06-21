@@ -25,11 +25,18 @@ import project.app.response.response.Response;
 public class PutUserResponseRequest {
 
     private String date;
+    private boolean validity;
 
     public static BiFunction<Response,PutUserResponseRequest,Response> dtoToEntityUpdater(){
-        return (responce, request) -> {
-            responce.setDate(LocalDate.parse(request.getDate()));        
-            return responce;
+
+
+
+        return (response, request) -> {
+            if(request.getDate()!= null){
+                response.setDate(LocalDate.parse(request.getDate()));
+            }
+            response.setValidity(request.isValidity());
+            return response;
         };
     }
     

@@ -1,5 +1,5 @@
 ###
-POST http://localhost:8088/api/response/1/selected_word
+POST http://localhost:8089/api/response/1/selected_word
 Content-Type: application/json
 
 {
@@ -17,7 +17,7 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:8088/api/response/1/selected_word
+GET http://localhost:8089/api/response/1/selected_word
 
 ###
 GET http://localhost:8088/api/response/1/selected_word/1

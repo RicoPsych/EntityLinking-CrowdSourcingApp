@@ -7,11 +7,12 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:8087/api/tasks/1/response/1
+PUT http://localhost:8087/api/tasks/1/response/4
 Content-Type: application/json
 
 {
-    "date": "2019-01-01"
+    "date": "2019-01-01",
+    "validity": false
 }
 
 ###
@@ -20,3 +21,6 @@ GET http://localhost:8087/api/tasks/1/response
 ###
 
 DELETE http://localhost:8087/api/tasks/1/response/1
+
+###
+PUT http://localhost:8087/api/tasks/1/response/1/validate

@@ -37,6 +37,7 @@ public class GetUserResponsesResponse {
     private static class _Response{
         private Long id;
         private String date;
+        private boolean validity;
     }
 
     @Singular
@@ -49,6 +50,7 @@ public class GetUserResponsesResponse {
                 .map(user_response -> _Response.builder()
                     .id(user_response.getId())
                     .date(user_response.getDate().toString())
+                    .validity(user_response.isValidity())
                     .build())
                 .forEach(response::user_response);
             return response.build();

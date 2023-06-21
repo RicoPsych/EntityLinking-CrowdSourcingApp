@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import io.micrometer.common.lang.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -49,5 +50,9 @@ public class Response implements Serializable{
     @ManyToOne
     @JoinColumn(name="task_id")
     private Task task;
+
+    @Column(name="validity")
+    private boolean validity;
+
 
 }

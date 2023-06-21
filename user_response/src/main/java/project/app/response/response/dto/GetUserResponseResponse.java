@@ -22,11 +22,13 @@ import project.app.response.response.Response;
 public class GetUserResponseResponse {
     private Long id;
     private String date;
+    private boolean validity;
 
     public static Function<Response,GetUserResponseResponse> entityToDtoMapper(){
         return response -> GetUserResponseResponse.builder()
             .id(response.getId())
             .date(response.getDate().toString())
+            .validity(response.isValidity())
             .build();
     }
 }
