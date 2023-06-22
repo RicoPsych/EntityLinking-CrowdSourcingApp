@@ -58,12 +58,12 @@ Content-Type: application/json
 GET http://localhost:8087/api/tasks/1/response
 
 ###     111111111111111111111111111111111111111
-POST http://localhost:8089/api/response/1/selected_word
+POST http://localhost:8089/api/response/4/selected_word
 Content-Type: application/json
 
 {
-    "start_index":1,
-    "end_index":4
+    "start_index":6,
+    "end_index":7
 }
 
 ###

@@ -170,6 +170,28 @@ public class TaskController {
         private Long index_end;
     }
 
+                            //     "indexStart":1,
+                        //     "indexEnd":2,
+                        //     "textId":1,
+                        //     "kbLink":"link",
+                        //     "typeId":1
+
+    @ToString
+    @Setter
+    @EqualsAndHashCode
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    private static class _NamedEntity {
+
+        private Long indexStart;
+        private Long indexEnd;
+        private Long textId;
+        private String kblink;
+        private Long typeId;
+    }
+
 
     private List<_Response> getValidResponses(long task_id) {
 
@@ -379,10 +401,19 @@ public class TaskController {
                         HttpEntity<_Response> requestEntity = new HttpEntity<>(updated_response, headers);
                         restTemplate.put(url, requestEntity, map);
 
-
                         for (_SelectedWord sw : current_res_sw){
                             //TODO: POST request NamedEntity(sw)
                             System.out.println(sw);
+                            headers = new org.springframework.http.HttpHeaders();
+                            headers.setContentType(MediaType.APPLICATION_JSON);
+                            url = "http://localhost:8084/api/texts/{text_id}/entities";
+                            map = new HashMap<>();
+                            map.put("text_id","1");
+
+                           _NamedEntity new_named_entity = new _NamedEntity(sw.getIndex_start(), sw.getIndex_end(), Long.valueOf(1),"",Long.valueOf(1));
+
+                            HttpEntity<_NamedEntity> rEntity = new HttpEntity<>(new_named_entity, headers);
+                            restTemplate.postForLocation(url, rEntity, map);
                         }
                     }
 
