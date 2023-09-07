@@ -1,0 +1,38 @@
+###
+POST http://localhost:8081/api/texts
+Content-Type: application/json
+
+{
+    "name": "text1",
+    "content": "content",
+    "textTags":[1,2,4],
+    "taskSets":[]
+}
+###
+PUT http://localhost:8081/api/texts/1
+Content-Type: application/json
+
+{
+    "name": "Big",
+    "content": "Chungus",
+    "textTags":[1],
+    "taskSets":[1]
+}
+
+###
+GET http://localhost:8081/api/texts
+###
+GET http://localhost:8081/api/texts/1
+###
+GET http://localhost:8081/api/tags/1
+
+###
+GET http://localhost:8081/api/texts/5
+
+###
+GET http://localhost:8081/api/texts/1/entities/1
+###
+
+DELETE http://localhost:8081/api/texts/1
+
+###

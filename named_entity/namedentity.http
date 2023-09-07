@@ -1,0 +1,39 @@
+###
+POST http://localhost:8084/api/texts/1/entities
+Content-Type: application/json
+
+{
+    "indexStart":1,
+    "indexEnd":2,
+    "textId":1,
+    "kbLink":"link",
+    "typeId":1
+}
+###
+PUT http://localhost:8084/api/texts/1/entities/1
+Content-Type: application/json
+
+{
+    "indexStart":3,
+    "indexEnd":5,
+    "kbLink":"nowy link",
+    "typeId":2
+}
+
+###
+GET http://localhost:8084/api/texts/1/entities
+
+###
+GET http://localhost:8084/api/texts/1/entities/1
+###
+DELETE http://localhost:8084/api/texts/1/entities/1
+
+###
+
+
+POST http://localhost:8084/api/types
+Content-Type: application/json
+
+{
+}
+###

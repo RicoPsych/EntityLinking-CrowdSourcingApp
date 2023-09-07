@@ -1,0 +1,33 @@
+POST http://localhost:8085/api/task_sets
+Content-Type: application/json
+
+{
+    "texts":[],
+    "namedEntityTypes":[]
+}
+
+###
+DELETE  http://localhost:8085/api/task_sets/2
+
+
+
+###
+POST http://localhost:8085/api/texts
+Content-Type: application/json
+
+{
+}
+###
+
+###
+
+PUT http://localhost:8085/api/task_sets/2
+Content-Type: application/json
+
+{
+    "texts":[],
+    "namedEntityTypes":[1]
+}
+
+###
+GET http://localhost:8085/api/task_sets

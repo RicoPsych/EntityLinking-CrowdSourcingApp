@@ -1,0 +1,114 @@
+###
+POST http://localhost:8083/api/netypes
+Content-Type: application/json
+
+{
+    "name":"2",
+    "description":"desc",
+    "namedEntityTypeParent":1,
+    "textTags":[],
+    "taskSets":[]
+}
+
+###
+POST http://localhost:8081/api/texts
+Content-Type: application/json
+
+{
+    "name": "text1",
+    "content": "content",
+    "textTags":[1,2,4],
+    "taskSets":[]
+}
+
+###
+POST http://localhost:8085/api/task_sets
+Content-Type: application/json
+
+{
+    "texts":[],
+    "namedEntityTypes":[]
+}
+
+###
+POST http://localhost:8086/api/task_sets/1/tasks
+Content-Type: application/json
+
+{
+    "indexStart":1,
+    "indexEnd":2,
+    "startDate":"2001-10-10",
+    "endDate":"2001-10-10",
+    "submitionsNum":1,
+    "taskSet":1
+}
+
+###
+PUT http://localhost:8086/api/task_sets/1/tasks/1/validate
+
+###
+POST http://localhost:8087/api/tasks/1/response
+Content-Type: application/json
+
+{
+    "date": "2020-09-03"
+}
+
+###
+GET http://localhost:8087/api/tasks/1/response
+
+###     111111111111111111111111111111111111111
+POST http://localhost:8089/api/response/4/selected_word
+Content-Type: application/json
+
+{
+    "start_index":6,
+    "end_index":7
+}
+
+###
+POST http://localhost:8089/api/response/2/selected_word
+Content-Type: application/json
+
+{
+    "start_index":1,
+    "end_index":3
+}
+
+###     222222222222222222222222222222222222222
+POST http://localhost:8089/api/response/3/selected_word
+Content-Type: application/json
+
+{
+    "start_index":1,
+    "end_index":3
+}
+
+###     333333333333333333333333333333333333333
+POST http://localhost:8089/api/response/4/selected_word
+Content-Type: application/json
+
+{
+    "start_index":1,
+    "end_index":5
+}
+
+###
+POST http://localhost:8089/api/response/3/selected_word
+Content-Type: application/json
+
+{
+    "start_index":5,
+    "end_index":8
+}
+
+
+
+###
+PUT http://localhost:8087/api/tasks/1/response/3/validate
+
+###
+GET http://localhost:8089/api/response/4/selected_word
+
+###
+DELETE http://localhost:8089/api/response/4/selected_word/7

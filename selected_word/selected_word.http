@@ -1,0 +1,26 @@
+###
+POST http://localhost:8089/api/response/1/selected_word
+Content-Type: application/json
+
+{
+    "start_index":8,
+    "end_index":101
+}
+
+###
+PUT http://localhost:8088/api/response/1/selected_word/1
+Content-Type: application/json
+
+{
+     "start_index":88,
+    "end_index":10
+}
+
+###
+GET http://localhost:8089/api/response/1/selected_word
+
+###
+GET http://localhost:8088/api/response/1/selected_word/1
+
+###
+DELETE http://localhost:8088/api/response/1/selected_word/1

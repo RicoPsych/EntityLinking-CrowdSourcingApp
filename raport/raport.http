@@ -1,0 +1,21 @@
+###
+
+POST http://localhost:8089/api/response/1/raport
+Content-Type: application/json
+
+{
+    "content": "AAAAAAAAAAAAAAAAAAAAAA"
+}
+###
+PUT http://localhost:8089/api/response/1/raport/2
+Content-Type: application/json
+
+{
+    "content": "CCCCCCCCCCCCCCCCCCC"
+}
+
+###
+GET http://localhost:8089/api/response/1/raport
+###
+DELETE http://localhost:8089/api/response/1/raport/1
+###
